@@ -6,7 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	// 클라이언트가 선택할수있는 타임존
+	// 클라이언트가 선택할수있는 타임존111
 	// 출력되는 서버의 시간이 해당타임존에 맞게
 	request.setCharacterEncoding("utf-8");
 	String yearStr = request.getParameter("year");
