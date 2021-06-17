@@ -18,7 +18,7 @@
  	C - Get
  	R - Post
  	U - Put/Patch
- 	D -	Delete
+ 	D - Delete
  	options : preflight 요청으로 특정 메소드의 지원여부를 확인할 목적으로 사용
  	head : response를 받아올때 body를 재외하고 싶은 요청에 사용
  	trace : server debugging
@@ -28,8 +28,9 @@
  3. Requset Body(Message Body,Contents Body) : 서버로 전송할 메시지 영역
  Line : <%=request.getProtocol() %> <%=request.getRequestURI() %> <%=request.getRequestURL() %>
  Body : <%=request.getInputStream().available() %>
- 	<%=request.getCharacterEncoding() %>
- 	<%=request.getContentLength() %>
+ 		<%=request.getCharacterEncoding() %>
+ 		<%=request.getContentLength() %>
+ 		<%=request.getContentType() %>
 </pre>
 <table>
 <thead>

@@ -1,3 +1,4 @@
+<%@page import="java.util.TimeZone"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.DateFormatSymbols"%>
@@ -11,30 +12,34 @@
 	request.setCharacterEncoding("utf-8");
 	String yearStr = request.getParameter("year");
 	String monthStr = request.getParameter("month");
-	
-	Locale loc = request.getLocale();
-
 	String language = request.getParameter("language");
+	String time = request.getParameter("time");	
+	Locale loc = request.getLocale();
+	TimeZone tz = TimeZone.getDefault();
+	
 	if(language != null && !language.isEmpty()){
 		loc=Locale.forLanguageTag(language);
 	}
 	
 	DateFormatSymbols dfs = DateFormatSymbols.getInstance(loc);
 	
-	Calendar cal = getInstance();    
+	Calendar cal = getInstance();
 	int today = cal.get(DAY_OF_MONTH);
 	int toMonth = cal.get(MONTH);
 	int toYear = cal.get(YEAR);
 	
-	
+	if(time != null){
+		tz = TimeZone.getTimeZone(time);
+	}
 	
 	if(yearStr != null && yearStr.matches("\\d{4}")){
-		
+		 
 		cal.set(YEAR, Integer.parseInt(yearStr));
 	}
 	if(monthStr != null && monthStr.matches("\\d{1,2}")){
 		cal.set(MONDAY,Integer.parseInt(monthStr));
 	}
+// 	cal.setTimeZone(tz);
 	int year = cal.get(YEAR);
 	int month = cal.get(MONTH);
     cal.set(DAY_OF_MONTH, 1);
@@ -47,6 +52,8 @@
     int nextYear= cal.get(YEAR);
     int nextMonth= cal.get(MONTH);
     cal.add(MONTH, -1);
+    
+    
 %>
 <!DOCTYPE html>
 <html>
@@ -69,21 +76,31 @@
 
 </head>
 <body>
+<form id="calendarForm">
+<!-- <select name="time"> -->
+<!-- <option value >시간선택</option> -->
+<%
+String optionPtrn = "<option %s value='%s'>%s</option>";
+// String[] times = TimeZone.getAvailableIDs();
+// for(String timeList : times){
+// 	String selected = timeList.equals(tz.getID())?"selected":"";
+// 	out.println(String.format(loc, optionPtrn, selected,timeList,timeList));
+// }
+%>
+<!-- </select> -->
 <h4>현재 서버의 시각 : <%=String.format(loc,"%tc",cal) %></h4>
-<%=today%>
-<%=toMonth %>
-<%=toYear %>
+<h4>타임존 : <%=tz.getDisplayName() %></h4>
+
 <h4>
 <a href="#" class="moveA" data-year="<%=beforeYear%>" data-month="<%=beforeMonth%>">이전달</a>
 <%=String.format(loc,"%1$tY,%1$tB",cal) %>
 <a href="#" class="moveA" data-year="<%=nextYear%>" data-month="<%=nextMonth%>">다음달</a>
 </h4>
-<form id="calendarForm">
 <input type="number" name="year" placeholder="<%=year %>" value="<%=year %>"/>
 <select name="month">
 	<option value>월 선택</option>
 	<%
-	String optionPtrn = "<option %s value='%s'>%s</option>";
+	
 	String[] months = dfs.getMonths();
 		for(int i = 0;i<12;i++){
 			String selected = (i ==month)?"selected":"";
