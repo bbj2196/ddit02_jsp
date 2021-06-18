@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.enumtype.BrowserType;
 import kr.or.ddit.enumtype.MimeType;
 
@@ -27,19 +29,21 @@ public class UserAgentParsingServlet extends HttpServlet{
 		 String browser= BrowserType.parseUserAgent(userAgent);
 		 Map<String,Object> target = new HashMap<>();
 		 target.put("browser", browser);
-		 StringBuffer json = new StringBuffer();
-		 String PROPTRN="\"%s\":\"%s\",";
-		 // Marshalling : native로 표현된 데이터를 공통 표현방식(xml,json)으로 바꾸는 과정
-		 // UnMarshalling : 공통표현방식으로 표현된 데이터를 native방식으로 바꾸는 과정
-		 json.append("{");
-		 for (Entry<String,Object> entry : target.entrySet()) {
-			json.append(String.format(PROPTRN, entry.getKey(),Objects.toString(entry.getValue(),"")));
-		}
-		 json.append("}");
-		 int lastIdx = json.lastIndexOf(",");
-		 if(lastIdx >=0) {
-			 json.deleteCharAt(lastIdx);
-		 }
+//		 StringBuffer json = new StringBuffer();
+//		 String PROPTRN="\"%s\":\"%s\",";
+//		 // Marshalling : native로 표현된 데이터를 공통 표현방식(xml,json)으로 바꾸는 과정
+//		 // UnMarshalling : 공통표현방식으로 표현된 데이터를 native방식으로 바꾸는 과정
+//		 json.append("{");
+//		 for (Entry<String,Object> entry : target.entrySet()) {
+//			json.append(String.format(PROPTRN, entry.getKey(),Objects.toString(entry.getValue(),"")));
+//		}
+//		 json.append("}");
+		 ObjectMapper mapper = new ObjectMapper();
+		 String json =mapper.writeValueAsString(target);
+//		 int lastIdx = json.lastIndexOf(",");
+//		 if(lastIdx >=0) {
+//			 json.deleteCharAt(lastIdx);
+//		 }
 		 
 		 String mime = MimeType.findMimeText(accept);
 		 resp.setContentType(mime);

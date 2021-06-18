@@ -29,10 +29,11 @@ $(document).ready(function(){
 							// text : text/plain, html : text/html, json : application/json, script: text/javascript
 			success : function(res){
 				let meg = null;
+				console.log(typeof res);
 				if(typeof res == "string"){
-					meg = res
+					meg = res.browser
 				}else{
-					
+					meg="???"
 				}
 				resultArea.empty();
 				resultArea.append($("<p>").html(PATTERN.replace("%s",meg)));

@@ -10,35 +10,32 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <context-param>
-  <param-name>contentsPath</param-name>
-	<param-value>D:/contents</param-value>
+    <param-name>contentsPath</param-name>
+    <param-value>D:/contents</param-value>
   </context-param>
   <servlet>
-  <servlet-name>ImageListServlet</servlet-name>
-  <servlet-class>kr.or.ddit.servlet01.ImageListServlet</servlet-class>
-  <init-param>
-	<param-name>contentsPath</param-name>
-	<param-value>D:/contents</param-value>
-</init-param>
-<load-on-startup>1</load-on-startup>
+    <servlet-name>ImageListServlet</servlet-name>
+    <servlet-class>kr.or.ddit.servlet01.ImageListServlet</servlet-class>
+    <init-param>
+      <param-name>contentsPath</param-name>
+      <param-value>D:/contents</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
-  <servlet-name>ImageListServlet</servlet-name>
-  <url-pattern>/imageList</url-pattern>
+    <servlet-name>ImageListServlet</servlet-name>
+    <url-pattern>/imageList</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  <servlet-name>ImageServlet</servlet-name>
-  <servlet-class>kr.or.ddit.servlet01.ImageServlet</servlet-class>
-  <init-param>
-	<param-name>contentsPath</param-name>
-	<param-value>D:/contents</param-value>
-</init-param>
+    <servlet-name>ImageServlet</servlet-name>
+    <servlet-class>kr.or.ddit.servlet01.ImageServlet</servlet-class>
+    <init-param>
+      <param-name>contentsPath</param-name>
+      <param-value>D:/contents</param-value>
+    </init-param>
   </servlet>
-  
   <servlet-mapping>
-  <servlet-name>ImageServlet</servlet-name>
-  <url-pattern>/imageView</url-pattern>  
+    <servlet-name>ImageServlet</servlet-name>
+    <url-pattern>/imageView</url-pattern>
   </servlet-mapping>
 </web-app>
