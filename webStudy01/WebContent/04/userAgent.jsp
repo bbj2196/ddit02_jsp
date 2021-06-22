@@ -29,14 +29,17 @@ $(document).ready(function(){
 							// text : text/plain, html : text/html, json : application/json, script: text/javascript
 			success : function(res){
 				let meg = null;
+				let os = null;
 				console.log(typeof res);
-				if(typeof res == "string"){
+				if(typeof res == "object"){
 					meg = res.browser
+					os = res.os
 				}else{
 					meg="???"
+					os="???"
 				}
 				resultArea.empty();
-				resultArea.append($("<p>").html(PATTERN.replace("%s",meg)));
+				resultArea.append($("<p>").html(PATTERN.replace("%s",meg).replace("%o",os)));
 			},
 			error : function(xhr){
 				console.log(xhr)

@@ -10,7 +10,7 @@
 <body>
 <h4>HttpSErvletRequest request</h4>
 <pre>
- : 클라이언ㅇ트와 그로부터  발생한모든 정보를 가진객체
+ : 클라이언트와 그로부터  발생한모든 정보를 가진객체
  
  http request spec
  1. Request Line : Protocol URL Method - 명령식별

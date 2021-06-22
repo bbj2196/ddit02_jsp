@@ -30,11 +30,11 @@
 	세션의 연장여부 확인
 3. 세션연장 > 예 
 	타이머 리셋, 새션연장을 위한 요청발생(비동기 /sessionExtend, body 미포함)
-	<div id="msgArea">
-		세션을 연장하겠습니까?<br>
-		<input type="button" id="yesBtn" value="예">
-		<input type="button" id="noBtn" value="아니오">
-	</div>
+<!-- 	<div id="msgArea"> -->
+<!-- 		세션을 연장하겠습니까?<br> -->
+<!-- 		<input type="button" id="yesBtn" value="예"> -->
+<!-- 		<input type="button" id="noBtn" value="아니오"> -->
+<!-- 	</div> -->
 	
 <script type="text/javascript">
 // let msgbox = $("#msgArea")

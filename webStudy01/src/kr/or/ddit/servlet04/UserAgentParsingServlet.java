@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.enumtype.BrowserType;
 import kr.or.ddit.enumtype.MimeType;
+import kr.or.ddit.enumtype.OsType;
 
 @WebServlet("/04/getBrowserName")
 public class UserAgentParsingServlet extends HttpServlet{
@@ -27,8 +28,10 @@ public class UserAgentParsingServlet extends HttpServlet{
 		String accept = req.getHeader("Accept");
 		 String userAgent = req.getHeader("user-agent").toUpperCase();
 		 String browser= BrowserType.parseUserAgent(userAgent);
+		 OsType os = OsType.findOsType(userAgent);
 		 Map<String,Object> target = new HashMap<>();
 		 target.put("browser", browser);
+		 target.put("os",os.getOsName());
 //		 StringBuffer json = new StringBuffer();
 //		 String PROPTRN="\"%s\":\"%s\",";
 //		 // Marshalling : native로 표현된 데이터를 공통 표현방식(xml,json)으로 바꾸는 과정
