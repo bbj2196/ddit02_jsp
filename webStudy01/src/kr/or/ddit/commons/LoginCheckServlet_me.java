@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/login/loginCheck_sam.do")
-public class LoginCheckServlet_sam extends HttpServlet {
+@WebServlet("/login/loginCheck_me.do")
+public class LoginCheckServlet_me extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
