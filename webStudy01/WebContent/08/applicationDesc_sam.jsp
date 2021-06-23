@@ -1,3 +1,7 @@
+<%@page import="java.nio.file.StandardCopyOption"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.nio.file.Path"%>
+<%@page import="java.nio.file.Paths"%>
 <%@page import="java.nio.file.Files"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.io.FileOutputStream"%>
@@ -13,7 +17,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h4>
+<pre>
 	:Servlet container(WAS)와 해당 컨테이너 내에서 운영되는
 	어플리케이션(context)에 대한 정보를 가진 객체
 	1. 컨텍스트 초기화 파라미터 확보
@@ -27,24 +31,26 @@
 	/resources/images/cat2.png
 	/08/cat2.png
 	<%
-	String fileName="person_1.jpg";
-	String midlePath = "resources/images/";
-	URL pathUrl = application.getResource("/");
-	File filePath = new File(pathUrl.getPath()+midlePath+fileName);
-	File resFile = new File(pathUrl.getPath()+"/08/"+fileName);
-	byte[] buffer = new byte[1024];
-	int leng = -1;
-	try(
-			FileInputStream fis = new FileInputStream(filePath);
-			FileOutputStream fos = new FileOutputStream(resFile);
-			){
-		while((leng = fis.read(buffer))!= -1){
-			fos.write(buffer, 0, leng);
-		}
+	String imageURL="/resources/images/person_1.jpg";
+	String realPath = application.getRealPath(imageURL);
+	System.out.println(realPath);
+// 	File readFile = new File(realPath);
+// 	FileInputStream fis = new FileInputStream(readFile);
+	String destURLstr = "/08/cat2.png";
+	URL destURL = application.getResource(destURLstr);
+	Path target=null;
+	if(destURL==null){
+		String destRealPath = application.getRealPath(destURLstr);
+		target=Paths.get(destRealPath);
+	}else{
+	target = Paths.get(destURL.toURI());
 	}
-	System.out.println("종료");
+	InputStream is = application.getResourceAsStream(imageURL);
+	Files.copy(is, target,StandardCopyOption.REPLACE_EXISTING);
+	
+	out.println("종료");
 	%>
-</h4>
-<img alt="assad" src="<%=request.getContextPath()%>/08/person_1.jpg">
+</pre>
+<img alt="assad" src="<%=application.getContextPath() %>/08/person_1.jpg">
 </body>
 </html>

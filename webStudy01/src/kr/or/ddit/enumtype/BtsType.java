@@ -10,7 +10,7 @@ public enum BtsType {
 	SUGA("suga");
 	private String memName;
 	
-	private BtsType(String name) {
+	private BtsType(String name) {  
 		this.memName = name;
 	}
 	
