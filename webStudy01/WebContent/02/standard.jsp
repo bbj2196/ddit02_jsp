@@ -13,8 +13,8 @@
 	2. Back-End, Server side
 		1) scriptlet : <%// java code %>, 지역코드화
 		<%!
-		public void test(){
-			
+		public String test(){
+			return "테스트";
 		}
 		%>
 		2) expression : <%="출력데이터" %>

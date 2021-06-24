@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
+import kr.or.ddit.exception.UsernotFoundExecption;
+
 @WebServlet("/login/loginCheck.do")
 public class LoginCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -70,10 +72,12 @@ public class LoginCheckServlet extends HttpServlet {
 	}
 
 
-	private boolean validate(String id, String pass,Map<String,String>errors) {
+	private boolean validate(String id, String pass,Map<String,String>errors){
 		boolean valid = true;
 		if(id == null || id.isEmpty()) {
 			valid=false;
+			if(1==1)
+			throw new UsernotFoundExecption("사용자가 존재하지않음");
 			errors.put("mem_id","아이디는 필수 입력");
 		}
 		if(pass==null || pass.isEmpty()) {

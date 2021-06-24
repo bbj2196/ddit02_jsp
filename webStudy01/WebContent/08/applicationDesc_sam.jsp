@@ -1,3 +1,4 @@
+<%@page import="java.io.IOException"%>
 <%@page import="java.nio.file.StandardCopyOption"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.nio.file.Path"%>
@@ -45,8 +46,13 @@
 	}else{
 	target = Paths.get(destURL.toURI());
 	}
+	try(
 	InputStream is = application.getResourceAsStream(imageURL);
+			){
 	Files.copy(is, target,StandardCopyOption.REPLACE_EXISTING);
+	}catch(IOException e){
+		throw new IOException(e);
+	}
 	
 	out.println("종료");
 	%>

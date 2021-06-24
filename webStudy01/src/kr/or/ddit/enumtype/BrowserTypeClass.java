@@ -28,6 +28,6 @@ public class BrowserTypeClass {
 	}
 	   
 	   public void add(String key,String val) {
-		   
+		   listMap.put(key,val);
 	   }
 }
