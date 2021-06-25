@@ -1,0 +1,22 @@
+@charset "UTF-8";
+header{
+	height: 100px;
+    width: 100%;
+    background-color: beige;
+}
+#leftMenu{
+    width: 19%;
+    float: left;
+    background-color: blueviolet;
+}
+#contents{
+    width: 80%;
+    float: left;
+    background-color: yellowgreen;
+}
+footer{
+    float: left;
+    height: 100px;
+    width: 100%;
+    background-color: violet;
+}

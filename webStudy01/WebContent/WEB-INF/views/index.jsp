@@ -1,13 +1,7 @@
 <%@page import="java.util.Objects"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 <h4>웰컴 페이지</h4>
 <%
 request.setCharacterEncoding("utf-8");
@@ -29,5 +23,9 @@ if(user != null && !user.isEmpty()){
 	<%	
 }
 %>
-</body>
-</html>
+<script>
+	console.log($);
+	$(function(){
+		console.log($.fn.modal);
+	})
+</script>

@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 <h4>JSP 표준 구성요소</h4>
 <pre>
 	1. 정적 텍스트 (Front-End,client side) : HTML,JavaScript,CSS
@@ -49,5 +43,3 @@
 	5. EL(표현언어)
 	6. JSTL(tag library)
 </pre>
-</body>
-</html>

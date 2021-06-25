@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceInfo>
+	<menuList>
+		<menu>
+			<code>STANDARD</code>
+			<link>/02/standard.jsp</link>
+			<text>표준JSP</text>
+		</menu>
+		<menu>
+			<code>CALENDAR</code>
+			<link>/04/calendar_sam.jsp</link>
+			<text>달력</text>
+		</menu>
+	</menuList>
+</serviceInfo>

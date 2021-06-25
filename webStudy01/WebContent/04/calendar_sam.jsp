@@ -55,11 +55,7 @@
     
     
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>04/calendar.jsp</title>
+
 <style type="text/css">
 .sun{
 	color:red;
@@ -72,11 +68,9 @@
 	background-color:green;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-</head>
-<body>
 <form id="calendarForm">
+<input type="hidden" name="service" value="CALENDAR">
 <!-- <select name="time"> -->
 <!-- <option value >시간선택</option> -->
 <%
@@ -121,7 +115,7 @@ for(Locale tmpLoc:locales){
 %>
 </select>
 </form>
-<table>
+<table class="table table-bordered">
 <thead>
 	<tr>
 	<%
@@ -182,9 +176,6 @@ for(Locale tmpLoc:locales){
 		return false;
 	})
 </script>
-</body>
-</html>
-
 
 
 <%
