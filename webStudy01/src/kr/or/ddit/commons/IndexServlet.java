@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import kr.or.ddit.vo.MenuVO;
+import kr.or.ddit.vo.OperInfoVO;
 import kr.or.ddit.vo.ServiceInfoVO;
 
 @WebServlet(value="/index.do",loadOnStartup=1)
@@ -39,6 +40,20 @@ public class IndexServlet extends HttpServlet {
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
+		
+		// cal용 서버에 oper 올리기
+		try(
+				InputStream is =getClass().getResourceAsStream("../operInfo.xml");
+				){
+			JAXBContext context = JAXBContext.newInstance(OperInfoVO.class);
+			Unmarshaller unmarsal = context.createUnmarshaller();
+			OperInfoVO infoVO=(OperInfoVO) unmarsal.unmarshal(is);
+			application.setAttribute("operInfo", infoVO);
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+		
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String service = request.getParameter("service");

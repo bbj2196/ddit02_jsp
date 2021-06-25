@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<operInfo>
+	<operList>
+		<oper>
+			<text>PLUS</text>
+			<sign>+</sign>
+		</oper>
+		<oper>
+			<text>MINUS</text>
+			<sign>-</sign>
+		</oper>
+		<oper>
+			<text>DIVISION</text>
+			<sign>/</sign>
+		</oper>
+		<oper>
+			<text>MUTIPLY</text>
+			<sign>*</sign>
+		</oper>
+		<oper>
+			<text>MOD</text>
+			<sign>%</sign>
+		</oper>
+	</operList>
+</operInfo>

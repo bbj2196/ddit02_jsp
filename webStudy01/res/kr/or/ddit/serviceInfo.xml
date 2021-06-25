@@ -11,5 +11,20 @@
 			<link>/04/calendar_sam.jsp</link>
 			<text>달력</text>
 		</menu>
+		<menu>
+			<code>FACTORIAL</code>
+			<link>/05/factorial.jsp</link>
+			<text>팩토리얼연산</text>
+		</menu>
+		<menu>
+			<code>CALCULATOR</code>
+			<link>/10/calculator.jsp</link>
+			<text>5칙 연산</text>
+		</menu>
+		<menu>
+			<code>FileTree</code>
+			<link>/10/filesystem.jsp</link>
+			<text>파일구조</text>
+		</menu>
 	</menuList>
 </serviceInfo>
