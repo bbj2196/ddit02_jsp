@@ -32,6 +32,8 @@ public class FileListServlet extends HttpServlet {
 			System.out.println("파라미터 누락");
 			status = 400;
 		}
+		
+		System.out.println(path);
 		File dir = new File(path);
 		
 		if(!dir.isDirectory()) {
@@ -44,7 +46,7 @@ public class FileListServlet extends HttpServlet {
 		}
 		
 		File[] files = dir.listFiles();
-		StringBuffer buffer = new StringBuffer();
+//		StringBuffer buffer = new StringBuffer();
 		ObjectMapper mapper = new ObjectMapper();
 		List<FileVO> voList = new ArrayList<>();
 		for (File file : files) {
@@ -54,10 +56,14 @@ public class FileListServlet extends HttpServlet {
 			
 			if(file.isDirectory()) {
 				f_type="dir";
-				f_path+="\\";
+//				f_path+="\\";
 			}else {
 				f_type="file";
 			}
+			f_path=f_path.replace('\\', '/');
+			String contextPath = request.getContextPath();
+			int idx = f_path.indexOf(contextPath);
+			f_path = f_path.substring(idx+contextPath.length());
 			FileVO vo = new FileVO(f_type, f_name, f_path);
 			voList.add(vo);
 //			buffer.append(mapper.writeValueAsString(vo));

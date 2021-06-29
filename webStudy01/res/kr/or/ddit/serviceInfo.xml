@@ -22,6 +22,11 @@
 			<text>5칙 연산</text>
 		</menu>
 		<menu>
+			<code>CALCULATOR_SAM</code>
+			<link>/10/calculator_sam.jsp</link>
+			<text>5칙 연산_sam</text>
+		</menu>
+		<menu>
 			<code>FileTree</code>
 			<link>/10/filesystem.jsp</link>
 			<text>파일구조</text>

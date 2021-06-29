@@ -3,18 +3,13 @@
 
 <ul>
 
-<li class="directory" path="/" ><%=request.getContextPath() %></li>
-<li>assadsdasadasd</li>
-<ul class="directory">
-<li>assadsd1</li>
-<li>assads2</li>
-</ul>
+<li><span class="directory" path="/"><%=request.getContextPath() %></span></li>
 </ul>
 <script type="text/javascript">
 $("body").on("click",".directory_open",function(){
 	let me = $(this)
 	me.attr("class","directory");
-	me.children().remove();
+	me.siblings().remove();
 	
 })
 $("body").on("click",".directory",function(){
@@ -31,15 +26,17 @@ $("body").on("click",".directory",function(){
 		dataType : "json",
 		success : function(res) {
 			let list = $("<ul>")
-			me.append(list)
+			me.after(list)
 			$.each(res,function(i,v){
-				let file =$("<li>")
+				let li =$("<li>")
+				let span =$("<span>")
 				if(v.type=="dir"){
-					file.attr("class","directory")
-					file.attr("path",v.path)
+					span.attr("class","directory")
+					span.attr("path",v.path)
 				}
-				file.text(v.name)
-				list.append(file)
+				span.text(v.name)
+				li.append(span)
+				list.append(li)
 			})
 		},
 		error : function(xhr) {
