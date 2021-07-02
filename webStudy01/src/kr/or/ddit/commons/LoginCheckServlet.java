@@ -15,12 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
+import org.apache.commons.lang3.StringUtils;
+
 import kr.or.ddit.exception.UsernotFoundExecption;
+import kr.or.ddit.member.service.AuthenticateService;
+import kr.or.ddit.member.service.AuthenticateServiceImpl;
+import kr.or.ddit.vo.MemberVO;
 
 @WebServlet("/login/loginCheck.do")
 public class LoginCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private AuthenticateService service = new AuthenticateServiceImpl();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		//1. 파라미터 확보
@@ -29,70 +35,78 @@ public class LoginCheckServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Map<String,String>map = new HashMap<>();
 		session.setAttribute("errors", map);
-		boolean valid = validate(id,pass,map);
+		
+		MemberVO param = new MemberVO(id,pass);
+		
+		boolean valid = validate(param,map);
 		String goPage=null;
 		boolean redirect = false;
 		
 		//2. 검증
 		//필수파라미터 누락여부 확인(400)
-		
+		System.out.println("-----------");
+		System.out.println(id);
+		System.out.println(pass);
+		System.out.println(valid);
 		if(!valid) {
-//			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-//			return;
 			goPage="/login/loginForm.jsp";
 			redirect=true;
 		}
-		if(authenticated(id,pass)) {
+		try {
+		Object resultValue = service.authenticate(param);
+		if(resultValue instanceof MemberVO) {
 			//	1)성공 : welcome page로 이동(redirect)
 			goPage="/";
 			redirect=true;
-			session.setAttribute("authId", id);
+			// 로그인에 성공하면 웰컴페이지로 이동해서 성공한 이름을 보여줄것
+			session.setAttribute("authMember", resultValue);
 		}else {
 			//	2)실패 : login page로 이동(forward)
 			session.setAttribute("mem_id", id);
 			goPage="/login/loginForm.jsp";
+			session.setAttribute("failId", id);
+			session.setAttribute("message", "비밀번호 오류");
 		}
-		//3. 인증
+		}catch(UsernotFoundExecption e) {
+			goPage="/login/loginForm.jsp";
+			redirect=true;
+			session.setAttribute("message", e.getMessage());
+		}
+		
+		//3. 인증	
+		System.out.println(id);
 		if(redirect) {
 			response.sendRedirect(request.getContextPath()+goPage);
 		}else {
 			RequestDispatcher rd = request.getRequestDispatcher(goPage);
 			rd.forward(request, response);
 		}
-		System.out.println(id);
-		System.out.println(pass);
 
 		
 		}
 	
 
-	private boolean authenticated(String id, String pass) {
-//		return id.equals(pass);
-		return true;
-	}
-
-
-	private boolean validate(String id, String pass,Map<String,String>errors){
+	private boolean validate(MemberVO param,Map<String,String>errors){
 		boolean valid = true;
-		if(id == null || id.isEmpty()) {
+		if(StringUtils.isBlank(param.getMem_id())) {
 			valid=false;
-			if(1==1)
-			throw new UsernotFoundExecption("사용자가 존재하지않음");
 			errors.put("mem_id","아이디는 필수 입력");
+			throw new UsernotFoundExecption("사용자가 존재하지않음");
 		}
-		if(pass==null || pass.isEmpty()) {
+		if(StringUtils.isBlank(param.getMem_pass())) {
 			valid=false;
 			errors.put("mem_id","비밀번호 필수입력");
-		}else {
+		}
+		/*else {
 		Pattern regPatern = Pattern.compile("(^(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[0-9]+)(?=.*[!@#\\$%\\^\\&\\*]+).{4,8})$");
-		Matcher matcher = regPatern.matcher(pass);
+		Matcher matcher = regPatern.matcher(param.getMem_pass());
 		if(!matcher.find()) {
 			valid=false;
 			errors.put("mem_id","비밀번호는 영대소문자 숫자 특수문자를 포함한 4~8글자 이내");
 			}else {
 				System.out.println(matcher.group(1));
 			}
-		}
+		}*/
 		return valid;
 	}
 

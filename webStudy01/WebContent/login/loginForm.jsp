@@ -17,10 +17,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js" type="text/javascript"></script>
 </head>
 <body>
-<%Map<String,String>map = (Map<String,String>)request.getAttribute("errors");
+<%
+	//flash attribute
+	String message = (String)session.getAttribute("message");
+	session.removeAttribute("message");
 %>
 <div class="error">
 <%-- <%=map.get("mem_id") %> --%>
+<%=message %>
 ${errors }
 </div>
 <form name="loginForm" action="<%=request.getContextPath()%>/login/loginCheck.do" method="post">

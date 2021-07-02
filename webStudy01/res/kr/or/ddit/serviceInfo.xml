@@ -31,5 +31,11 @@
 			<link>/10/filesystem.jsp</link>
 			<text>파일구조</text>
 		</menu>
+		<menu>
+			<code>JDBC</code>
+			<href>/11/jdbcDesc.do</href>
+			<link>/WEB-INF/views/11/jdbcDesc.jsp</link>
+			<text>제이디비씨</text>
+		</menu>
 	</menuList>
 </serviceInfo>

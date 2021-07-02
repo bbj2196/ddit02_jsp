@@ -17,7 +17,7 @@ public class LogoutServlet extends HttpServlet {
        
    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		if(session == null) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST,"로그아웃이 최초의요청??");
 			return;
@@ -25,7 +25,7 @@ public class LogoutServlet extends HttpServlet {
 //		session.removeAttribute("authId");
 		session.invalidate();
 		String message = "로그아웃 성공";
-		session.setAttribute("message", message);
+		request.setAttribute("message", message);
 		response.sendRedirect(request.getContextPath()+"/");
 	}
 
