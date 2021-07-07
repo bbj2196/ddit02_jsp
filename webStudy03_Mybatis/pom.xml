@@ -48,7 +48,7 @@
 			<artifactId>ojdbc6</artifactId>
 			<version>12.1.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/ojdbc6.jar</systemPath>
+			<systemPath>D:/gitRepository/ddit02_jsp/webStudy03_Mybatis/src/main/webapp/WEB-INF/lib/ojdbc6.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

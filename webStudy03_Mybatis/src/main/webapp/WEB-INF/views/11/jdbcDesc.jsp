@@ -60,6 +60,9 @@
 		<tfoot>
 			<tr>
 				<td colspan="3">
+				<div id="pagingArea">
+				
+				</div>
 					<div id="searchUI">
 						<input type="text" name="search"> 
 						<input type="submit"value="검색" id="searchBtn">
@@ -69,11 +72,19 @@
 		</tfoot>
 	</table>
 <form id="searchForm">
-	<input type="hidden" name="search">
-	<input type="hidden" name="page">
+	<input type="text" name="search">
+	<input type="text" name="page">
 </form>
 <script type="text/javascript">
-
+$(document).ajaxError(function(event,xhr,options,error){
+	console.log(event)
+	console.log(xhr)
+	console.log(options)
+	console.log(error)
+}).ajaxComplete(function(event,xhr,options){
+	searchForm.find("[name='page']").val("");
+	searchForm.get[0].reset();
+})
 function makeTdFromData(propVO){
 	let tds = [];
 	for( let propName in propVO){
@@ -88,9 +99,16 @@ let searchUI = $("#searchUI").on("click","#searchBtn",function(){
 		let name = this.name
 		let value = $(this).val();
 		searchForm.find("[name='"+name+"']").val(value)
+		
 	})
 	searchForm.submit()
 })
+
+	let pagingArea = $("#pagingArea")("click",".pageLink",function(){
+		let page = $(this).data("page");
+		searchForm.find("[name='page']").val(page)
+		searchForm.submit()
+	})
 	let searchForm=$("#searchForm").on("submit",function(eve){
 		eve.preventDefault();
 		let url = this.action;
@@ -107,19 +125,18 @@ let searchUI = $("#searchUI").on("click","#searchBtn",function(){
 			data:data,
 			dataType : "json",
 			success : function(res) {
-				console.log(res);
+				let dataList = res.dataList;
+				
 				let trs=[];
 				let table=$("tbody");
+				pagingArea.empty();
 				table.empty();
 				$.each(res,function(i,v){  
 					let row =  $("<tr>").append(makeTdFromData(v));
 					
 					row.appendTo(table)
 				})
-				
-			},
-			error : function(xhr) {
-				alert(xhr.status)
+				pagingArea.html(res.pagingHTML)
 			}
 		})
 		return false;

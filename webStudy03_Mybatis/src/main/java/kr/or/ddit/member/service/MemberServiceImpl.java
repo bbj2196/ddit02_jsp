@@ -26,8 +26,21 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ServiceResult createMember(MemberVO member) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result =null;
+		try {
+		retrieveMember(member.getMemId());
+		
+		result = ServiceResult.PKDUPLICATED;
+		}catch (UserNotFoundExecption e) {
+			int cnt=dao.insertMember(member);
+			if(cnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAIL;
+			}
+		}
+		
+		return result;
 	}
 
 	@Override

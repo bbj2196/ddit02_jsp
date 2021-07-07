@@ -23,6 +23,8 @@ if(user != null){
 	<h4>로그인을 해주세요</h4>
 	<h4>
 	<a href="<%=request.getContextPath()%>/login/loginForm.jsp">로그인 하기</a>
+	<br>
+	<a href="<%=request.getContextPath()%>/member/create.do">회원가입</a>
 	</h4>
 	<%	
 }

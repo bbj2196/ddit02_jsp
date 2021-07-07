@@ -53,10 +53,9 @@
 	</select>
 
 	<resultMap type="MemberVO" id="MemberMap" autoMapping="true">
-		<result property="memId" column="MEM_ID" />
-	
+		<id property="memId" column="MEM_ID" />
 		<collection property="prodList" javaType="java.util.Set" ofType="kr.or.ddit.vo.ProdVO" autoMapping="true">
-			<result property="prodId" column="PROD_ID" />
+			<id property="prodId" column="PROD_ID" />
 			<association property="buyer" autoMapping="true"></association>
 		</collection>
 	</resultMap>
@@ -109,4 +108,31 @@
 		mem_delete = '1'
 		where mem_id = #{memId}
 	</delete>
+	
+	<insert id="insertMember" parameterType="MemberVO">
+	insert into member(
+			MEM_ID,	MEM_PASS,
+			MEM_NAME,	MEM_REGNO1,
+			MEM_REGNO2,	MEM_BIR,
+			MEM_ZIP,	MEM_ADD1,
+			MEM_ADD2,	MEM_HOMETEL,
+			MEM_COMTEL,	MEM_HP,
+			MEM_MAIL,	MEM_JOB,
+			MEM_LIKE,	MEM_MEMORIAL,
+			MEM_MEMORIALDAY
+	)
+	values(
+		#{memId,jdbcType=VARCHAR},   	#{memPass,jdbcType=VARCHAR},
+		#{memName,jdbcType=VARCHAR},    #{memRegno1,jdbcType=VARCHAR},
+		#{memRegno2,jdbcType=VARCHAR},	to_date(#{memBir,jdbcType=DATE},'YYYY-MM-DD'),
+		#{memZip,jdbcType=VARCHAR}, 	#{memAdd1,jdbcType=VARCHAR},
+		#{memAdd2,jdbcType=VARCHAR},	#{memHometel,jdbcType=VARCHAR},
+		#{memComtel,jdbcType=VARCHAR},	#{memHp,jdbcType=VARCHAR},
+		#{memMail,jdbcType=VARCHAR},	#{memJob,jdbcType=VARCHAR},
+		#{memLike,jdbcType=VARCHAR},	#{memMemorial,jdbcType=VARCHAR},
+		to_date(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD')
+	)
+	
+	</insert>
 </mapper>
+

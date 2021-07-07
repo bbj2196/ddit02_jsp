@@ -1,5 +1,9 @@
 package kr.or.ddit.member.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundExecption;
 import kr.or.ddit.member.dao.MemberDAO;
@@ -18,7 +22,20 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		String savedPass = savedVO.getMemPass();
 		String inputPass = param.getMemPass();
-		boolean valid =  savedPass.equals(inputPass);
+		String encoded=null;
+		try {
+			MessageDigest md= MessageDigest.getInstance("SHA-512");
+			byte[] input = inputPass.getBytes();
+			byte[] encrypted = md.digest(input);
+			 encoded = Base64.getEncoder().encodeToString(encrypted);
+			
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		boolean valid =  savedPass.equals(encoded);
+		
 		if( valid) {
 			resultVal=savedVO;
 			MemberVO detail = dao.selectMemberDetail(savedVO.getMemId());

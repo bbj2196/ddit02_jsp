@@ -150,12 +150,34 @@
 					<label id="memDelete-error" class="error" for="memDelete"><%=errors.get("memDelete")%></label></td>
 			</tr>
 			<tr>
+			<%
+			if(session.getAttribute("authMember") == null){
+				%>
+				<td colspan="2"><input type="button" value="가입하기" id="create"></td>
+				<%
+			}else{
+				%>
 				<td colspan="2"><input type="submit" value="수정하기"></td>
+				<%
+			}
+			%>
 			</tr>
 		</table>
 	</form>
 <script type="text/javascript">
-$("#memberForm").validate();
+$(function(){
+	let memForm = $("#memberForm");
+	memForm.validate();
+	
+	let createMem = $("#create").on("click",function(eve){
+		eve.preventDefault();
+		memForm.attr("action","<%=request.getContextPath()%>/member/create.do").submit();
+		return false;
+	})
+	$("input").on("blur",function(){
+		memForm.validate();
+	})
+})
 </script>
 </body>
 </html>

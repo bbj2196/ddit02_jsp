@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingVO;
 
 public class MemberDaoImplTest {
 
@@ -26,12 +27,34 @@ public class MemberDaoImplTest {
 
 	@Test
 	public void testInsertMember() {
-		fail("Not yet implemented");
+		
+		MemberVO member = MemberVO.builder()
+							.memId("test")
+							.memPass("test")
+							.memName("test")
+							.memRegno1("test")
+							.memRegno2("test")
+							.memBir("2021-07-07")
+							.memZip("test")
+							.memAdd1("test")
+							.memAdd2("test")
+							.memHometel("test")
+							.memComtel("test")
+							.memHp("test")
+							.memMail("test")
+							.memJob("test")
+							.memLike("test")
+							.memMemorial("test")
+							.memMemorialday("2021-07-07")
+							.memMileage(111)
+								.build();
+		
+		assertEquals(1, dao.insertMember(member));
 	}
 
 	@Test
 	public void testSelectMemeberList() {
-		List<MemberVO> list = dao.selectMemeberList(null);
+		List<MemberVO> list = dao.selectMemeberList(new PagingVO<>());
 		assertNotNull(list);
 	}
 

@@ -1,5 +1,8 @@
 package kr.or.ddit.vo;
 
+import java.util.List;
+import java.util.Set;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,4 +37,5 @@ public class ProdVO {
 	private Integer prodQtysale;
 	private Integer prodMileage;
 
+	private List<MemberVO> memberList;
 }

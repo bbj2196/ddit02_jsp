@@ -31,13 +31,20 @@ public class MemberDaoImpl implements MemberDAO {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
 			return sqlSession.selectOne("kr.or.ddit.member.dao.MemberDAO.selectMemberById", mem_id);
 		}
+		
 	}
 
 	
 	@Override
 	public int insertMember(MemberVO member) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
+					MemberDAO mapper = sqlSession.getMapper(MemberDAO.class);
+					int cnt = mapper.insertMember(member);
+					sqlSession.commit();
+					return cnt;
+				}
+		
+		
 	}
 
 	@Override

@@ -7,6 +7,8 @@
  </settings>
  <typeAliases>
  <typeAlias type="kr.or.ddit.vo.MemberVO" alias="MemberVO"/>
+ <typeAlias type="kr.or.ddit.vo.PagingVO" alias="PagingVO"/>
+ <typeAlias type="kr.or.ddit.vo.ProdVO" alias="ProdVO"/>
  </typeAliases>
 	<environments default="dev">
 	<environment id="dev">
@@ -27,5 +29,6 @@
 	<mapper resource="kr/or/ddit/db/mybatis/mappers/Member.xml"/>
 	<mapper resource="kr/or/ddit/db/mybatis/mappers/Empl.xml"/>
 	<mapper resource="kr/or/ddit/db/mybatis/mappers/DBProp.xml"/>
+	<mapper resource="kr/or/ddit/db/mybatis/mappers/Prod.xml"/>
 	</mappers>
 </configuration>

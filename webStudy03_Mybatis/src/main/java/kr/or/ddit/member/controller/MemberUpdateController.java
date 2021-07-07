@@ -41,6 +41,7 @@ public class MemberUpdateController extends HttpServlet {
 		MemberVO loginMem = (MemberVO) session.getAttribute("authMember");
 		if(loginMem == null || StringUtils.isBlank(loginMem.getMemId())){
 			response.sendRedirect(request.getContextPath()+"/index.do");
+			return;
 		}
 		MemberVO updateMem = service.retrieveMember(loginMem.getMemId());
 		request.setAttribute("member", updateMem);
@@ -68,7 +69,7 @@ public class MemberUpdateController extends HttpServlet {
 		
 		if(valid) {
 		ServiceResult result = service.modifyMember(member);
-		String message = "";
+		String message = null;
 		switch (result) {
 		case OK:
 			// 마이페이지로 이동,  요청이 완료되었기때문 -> redirect
