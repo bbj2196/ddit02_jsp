@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceInfo>
+	<menuList>
+		<menu>
+			<code>STANDARD</code>
+			<link>/02/standard.jsp</link>
+			<text>표준JSP</text>
+		</menu>
+		<menu>
+			<code>CALENDAR</code>
+			<link>/04/calendar_sam.jsp</link>
+			<text>달력</text>
+		</menu>
+		<menu>
+			<code>FACTORIAL</code>
+			<link>/05/factorial.jsp</link>
+			<text>팩토리얼연산</text>
+		</menu>
+		<menu>
+			<code>CALCULATOR</code>
+			<link>/10/calculator.jsp</link>
+			<text>5칙 연산</text>
+		</menu>
+		<menu>
+			<code>CALCULATOR_SAM</code>
+			<link>/10/calculator_sam.jsp</link>
+			<text>5칙 연산_sam</text>
+		</menu>
+		<menu>
+			<code>FileTree</code>
+			<link>/10/filesystem.jsp</link>
+			<text>파일구조</text>
+		</menu>
+		<menu>
+			<code>JDBC</code>
+			<href>/11/jdbcDesc.do</href>
+			<link>/WEB-INF/views/11/jdbcDesc.jsp</link>
+			<text>제이디비씨</text>
+		</menu>
+				<menu>
+			<code>EMPLIST</code>
+			<href>/employee/empList.do</href>
+			<link>/employee/empList.do</link>
+			<text>empList</text>
+		</menu>
+
+		<menu>
+			<code>MEMLIST</code>
+			<href>/member/memberList.do</href>
+			<link>/member/memberList.do</link>
+			<text>멤버리스트</text>
+		</menu>
+	</menuList>
+</serviceInfo>
