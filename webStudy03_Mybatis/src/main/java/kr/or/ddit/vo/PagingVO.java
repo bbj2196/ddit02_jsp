@@ -24,7 +24,7 @@ public class PagingVO<T> {
 	private int blockSize=5;
 	
 	private int totalPage;
-	private int currentPage;
+	private int currentPage=1;
 	private int startRow;
 	private int endRow;
 	private int startPage;

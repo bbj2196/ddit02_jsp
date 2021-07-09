@@ -104,7 +104,7 @@ let searchUI = $("#searchUI").on("click","#searchBtn",function(){
 	searchForm.submit()
 })
 
-	let pagingArea = $("#pagingArea")("click",".pageLink",function(){
+	let pagingArea = $("#pagingArea").on("click",".pageLink",function(){
 		let page = $(this).data("page");
 		searchForm.find("[name='page']").val(page)
 		searchForm.submit()

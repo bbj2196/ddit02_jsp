@@ -15,6 +15,7 @@ public class CustomSqlSessionFactoryBuilder {
 		
 		sqlSessionFactory=new SqlSessionFactoryBuilder().build(reader);
 	} catch (IOException e) {
+		e.printStackTrace();
 		throw new RuntimeException(e);
 	}
 	}

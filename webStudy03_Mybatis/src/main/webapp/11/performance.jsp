@@ -15,8 +15,6 @@
 	<a href="100Conn100Process.jsp">100번연결과 100번처리</a> 950ms
 	<a href="oneConn100Process.jsp">1번연결과 100번처리</a> 18ms
 	
-
-
 </pre>
 </body>
 </html>

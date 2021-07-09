@@ -22,19 +22,22 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		String savedPass = savedVO.getMemPass();
 		String inputPass = param.getMemPass();
-		String encoded=null;
-		try {
-			MessageDigest md= MessageDigest.getInstance("SHA-512");
-			byte[] input = inputPass.getBytes();
-			byte[] encrypted = md.digest(input);
-			 encoded = Base64.getEncoder().encodeToString(encrypted);
-			
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
 		
 		
-		boolean valid =  savedPass.equals(encoded);
+//		String encoded=null;
+//		try {
+//			MessageDigest md= MessageDigest.getInstance("SHA-512");
+//			byte[] input = inputPass.getBytes();
+//			byte[] encrypted = md.digest(input);
+//			 encoded = Base64.getEncoder().encodeToString(encrypted);
+//			
+//		} catch (NoSuchAlgorithmException e) {
+//			throw new RuntimeException(e);
+//		}
+//		
+//		
+//		boolean valid =  savedPass.equals(encoded);
+		boolean valid =  EncryptUtils.matches(inputPass, savedPass);
 		
 		if( valid) {
 			resultVal=savedVO;

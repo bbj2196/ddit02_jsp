@@ -35,18 +35,14 @@ public class ConnectionFactory {
 		try {
 			dbProps.load(is);
 //			Class.forName(dbProps.getProperty("driverClassName"));
-			url = dbProps.getProperty("url");
+			url = dbProps.getProperty("url"); // 접속할 DB_url
 			user=dbProps.getProperty("user");
 			password=dbProps.getProperty("password");
 			drivername = dbProps.getProperty("driverClassName");
-			initialSize=Integer.parseInt(dbProps.getProperty("initialSize"));
-			maxTotal=Integer.parseInt(dbProps.getProperty("maxTotal"));   
-			maxIdle= Integer.parseInt(dbProps.getProperty("maxIdle"));    
-			maxWait = Long.parseLong(dbProps.getProperty("maxWait"));   
-//			OracleConnectionPoolDataSource ds = new OracleConnectionPoolDataSource();
-//			ds.setURL(url);
-//			ds.setUser(user);
-//			ds.setPassword(password);
+			initialSize=Integer.parseInt(dbProps.getProperty("initialSize"));// 최소 개설 수
+			maxTotal=Integer.parseInt(dbProps.getProperty("maxTotal"));// 최대 개설 가능수
+			maxIdle= Integer.parseInt(dbProps.getProperty("maxIdle"));
+			maxWait = Long.parseLong(dbProps.getProperty("maxWait"));// 최대 대기시간
 			
 			BasicDataSource ds = new BasicDataSource();
 			ds.setDriverClassName(drivername);

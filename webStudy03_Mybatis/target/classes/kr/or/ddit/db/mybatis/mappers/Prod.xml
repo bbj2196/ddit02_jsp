@@ -1,43 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.prod.dao.ProdDAO">
+	<sql id="sameCondition">
+		FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
+	              INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+		<trim prefix=" WHERE " prefixOverrides="AND">
+			<if test="detailSearch != null">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailSearch.prodLgu)">
+					AND PROD_LGU = #{detailSearch.prodLgu} 
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailSearch.prodBuyer)">
+					AND PROD_BUYER = #{detailSearch.prodBuyer} 
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailSearch.prodName)">
+					AND INSTR(PROD_NAME, #{detailSearch.prodName}) > 0 
+				</if>
+			</if>
+		</trim>
+	</sql>
 
+	<select id="selectTotalRecord" parameterType="PagingVO" resultType="int">
+		SELECT COUNT(*)
+		<include refid="sameCondition" />
+	</select>
+	<select id="selectProdList" parameterType="PagingVO" resultType="ProdVO">
+		WITH PRODALL AS(
+		    SELECT PROD_ID, PROD_NAME, PROD_LGU,
+		        PROD_COST, PROD_PRICE, PROD_MILEAGE
+		        , LPROD_NM
+		        , BUYER_NAME "buyer.buyerName"    
+		    <include refid="sameCondition" />
+		    ORDER BY PROD_LGU ASC , PROD_ID DESC
+		)
+		SELECT A.*
+		FROM (
+		    SELECT ROWNUM RNUM, PRODALL.*
+		    FROM PRODALL
+		) A
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
 
-
-	<resultMap type="ProdVO" id="customerMap" autoMapping="true">
-		<id property="prodId" column="PROD_ID" />
-<!-- 		<association property="buyer" autoMapping="true"></association> -->
-		<collection property="memberList" autoMapping="true"	javaType="java.util.List" ofType="MemberVO">
-			<id property="memId" column="MEM_ID" />
+	<resultMap type="ProdVO" id="prodMap" autoMapping="true">
+		<id property="prodId" column="PROD_ID"/>
+		<collection property="memberList" ofType="MemberVO" autoMapping="true">
+			<id property="memId" column="MEM_ID"/>
 		</collection>
 	</resultMap>
 	
-	
-	<select id="selectProd" parameterType="string"	resultMap="customerMap">
-
+	<select id="selectProd" parameterType="string" resultMap="prodMap">
 		WITH CARTMEM AS (
-						SELECT DISTINCT
-						    D.MEM_NAME,D.MEM_HP,D.MEM_MAIL,D.MEM_MILEAGE,C.CART_PROD,D.MEM_ID
-						FROM 
-						    CART C INNER JOIN MEMBER D ON (C.CART_MEMBER = D.MEM_ID)
-						)
-		SELECT
-			PROD_ID,    PROD_NAME,    PROD_LGU,
-		    PROD_BUYER,    PROD_COST,    PROD_PRICE,
-		    PROD_SALE,    PROD_OUTLINE,    PROD_DETAIL,
-		    PROD_IMG,    PROD_TOTALSTOCK,    TO_CHAR(PROD_INSDATE,'YYYY-MM-DD') PROD_INSDATE,
-		    PROD_PROPERSTOCK,    PROD_SIZE,    PROD_COLOR,
-		    PROD_DELIVERY,    PROD_UNIT,    PROD_QTYIN,
-		    PROD_QTYSALE,    PROD_MILEAGE,			 
-			B.LPROD_NM,
-			C.BUYER_ID "buyer.buyerId",    c.BUYER_NAME "buyer.buyerName",	C.BUYER_ADD1 "buyer.buyerAdd1",
-			C.BUYER_CHARGER "buyer.buyerCharger",	C.BUYER_TELEXT "buyer.buyerTelext",
-			D.*
-		FROM
-			 PROD A INNER JOIN LPROD B ON(B.LPROD_GU = A.PROD_LGU)
-		            INNER JOIN BUYER C ON(A.PROD_BUYER = C.BUYER_ID)
-		            LEFT OUTER JOIN CARTMEM D ON (A.PROD_ID = D.CART_PROD)
-		WHERE A.PROD_ID =#{prodId}
+			SELECT DISTINCT CART_PROD
+				, MEM_ID , MEM_NAME, MEM_HP, MEM_MAIL, MEM_MILEAGE
+			FROM CART INNER JOIN MEMBER ON (CART_MEMBER = MEM_ID)
+		), PRODALL AS (
+			SELECT 
+				PROD_ID,    PROD_NAME,    PROD_LGU,
+			    PROD_BUYER,    PROD_COST,    PROD_PRICE,
+			    PROD_SALE,    PROD_OUTLINE,    PROD_DETAIL,
+			    PROD_IMG,    PROD_TOTALSTOCK,    
+			    TO_CHAR(PROD_INSDATE, 'YYYY-MM-DD') PROD_INSDATE,
+			    PROD_PROPERSTOCK,    PROD_SIZE,    PROD_COLOR,
+			    PROD_DELIVERY,    PROD_UNIT,    PROD_QTYIN,
+			    PROD_QTYSALE,    PROD_MILEAGE
+			    , LPROD_NM
+			    , BUYER_NAME "buyer.buyerName"
+			    , BUYER_CHARGER "buyer.buyerCharger"
+			    , BUYER_ADD1 "buyer.buyerAdd1"
+			FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
+					INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+		)
+		SELECT PRODALL.*
+				, CARTMEM.*
+		FROM PRODALL LEFT OUTER JOIN CARTMEM ON (PROD_ID = CART_PROD)
+		WHERE PROD_ID = #{prod_id}
 	</select>
 </mapper>
+
+
+
+
+

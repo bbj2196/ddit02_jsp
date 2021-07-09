@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
 public class ProdDAOImplTest {
@@ -23,7 +24,7 @@ public class ProdDAOImplTest {
 
 	@Test
 	public void testSelectProd() {
-		ProdVO prod = dao.selectProd("P101000001");
+/*		ProdVO prod = dao.selectProd("P101000001");
 		assertNotNull(prod);
 		if(loger.isInfoEnabled()) {
 			loger.info("Prod : {}", prod);
@@ -36,7 +37,22 @@ public class ProdDAOImplTest {
 //		if(loger.isDebugEnabled()) {
 			loger.debug("MemList : {}", prod.getMemberList());
 //		}
-		assertEquals(2, prod.getMemberList().size());
+		assertEquals(2, prod.getMemberList().size());*/
+	}
+	
+	@Test
+	public void testListProd() {
+		ProdVO caseProd = new ProdVO();
+		caseProd.setProdLgu("P101");
+		caseProd.setProdBuyer("P10101");
+		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
+		paging.setCurrentPage(2);
+//		paging.setDetailSearch(caseProd);
+		
+		List<ProdVO> list = dao.selectProdList(paging);
+		assertNotNull(list);
+		
+				
 	}
 
 }

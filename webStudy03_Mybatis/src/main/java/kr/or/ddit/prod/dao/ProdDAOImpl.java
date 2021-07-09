@@ -1,9 +1,12 @@
 package kr.or.ddit.prod.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
+import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
 public class ProdDAOImpl implements ProdDAO {
@@ -25,6 +28,35 @@ public class ProdDAOImpl implements ProdDAO {
 					ProdDAO mapper = sqlSession.getMapper(ProdDAO.class);
 					return mapper.selectProd(prodId);
 				}
+	}
+
+	@Override
+	public int insertProd(ProdVO prod) {
+		// TODO Auto-generated method stub
+		
+		return 0;
+	}
+
+	@Override
+	public List<ProdVO> selectProdList(PagingVO<ProdVO> pagingVO) {
+		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
+			ProdDAO mapper = sqlSession.getMapper(ProdDAO.class);
+			return mapper.selectProdList(pagingVO);
+		}
+	}
+
+	@Override
+	public int selectTotalRecord(PagingVO<ProdVO> PagingVO) {
+		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
+			ProdDAO mapper = sqlSession.getMapper(ProdDAO.class);
+			return mapper.selectTotalRecord(PagingVO);
+		}
+	}
+
+	@Override
+	public int updateProd(ProdVO prod) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

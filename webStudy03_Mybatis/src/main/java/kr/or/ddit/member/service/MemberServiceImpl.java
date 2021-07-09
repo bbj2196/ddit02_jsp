@@ -13,6 +13,8 @@ import kr.or.ddit.vo.PagingVO;
 public class MemberServiceImpl implements MemberService {
 
 	private static MemberService instance;
+	private AuthenticateService authServ = new AuthenticateServiceImpl();
+	
 	private MemberDAO dao;
 	{
 		dao = MemberDaoImpl.getInstance();
@@ -32,6 +34,8 @@ public class MemberServiceImpl implements MemberService {
 		
 		result = ServiceResult.PKDUPLICATED;
 		}catch (UserNotFoundExecption e) {
+			String encoded = EncryptUtils.encryptSha512Base64(member.getMemPass());
+			member.setMemPass(encoded);
 			int cnt=dao.insertMember(member);
 			if(cnt>0) {
 				result = ServiceResult.OK;
@@ -60,11 +64,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ServiceResult modifyMember(MemberVO member) {
-		MemberVO saved = retrieveMember(member.getMemId());
-		String savedPass = saved.getMemPass();
-		String inputPass = member.getMemPass();
+		Object authResult = authServ.authenticate(member);
 		ServiceResult result = null;
-		if(savedPass.equals(inputPass)) {
+		if(authResult instanceof MemberVO) {
 			int rowcnt = dao.updateMember(member);
 			if(rowcnt > 0) {
 				result = ServiceResult.OK;
@@ -72,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
 				result = ServiceResult.FAIL;
 			}
 		}else {
-			result = ServiceResult.INVALIDPASSWORD;
+			result = (ServiceResult) authResult;
 		}
 		return result;
 	}
@@ -80,11 +82,10 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public ServiceResult removeMember(MemberVO member) {
-		MemberVO saved = retrieveMember(member.getMemId());
-		String savedPass = saved.getMemPass();
-		String inputPass = member.getMemPass();
+		Object authResult = authServ.authenticate(member);
+		
 		ServiceResult result = null;
-		if(savedPass.equals(inputPass)) {
+		if(authResult instanceof MemberVO) {
 			int rowcnt = dao.deleteMember(member.getMemId());
 			if(rowcnt > 0) {
 				result = ServiceResult.OK;
@@ -92,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
 				result = ServiceResult.FAIL;
 			}
 		}else {
-			result = ServiceResult.INVALIDPASSWORD;
+			result = (ServiceResult) authResult;
 		} 
 		return result;
 	}
