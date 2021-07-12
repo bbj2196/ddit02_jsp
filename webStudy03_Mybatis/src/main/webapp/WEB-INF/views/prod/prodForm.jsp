@@ -29,7 +29,7 @@
 						<option value="*">분류</option>
 						<c:if test="${not empty lprodList}">
 							<c:forEach var="lprod" items="${lprodList}">
-								<option value="${lprod['lprodGu'] }">${lprod["lprodNm"] }</option>
+								<option value="${lprod['lprodGu'] }" ${lprod['lprodNm'] eq prod.lprodNm ? "selected":""}>${lprod["lprodNm"] }</option>
 							</c:forEach>
 						</c:if>
 				</select><label id="prodLgu-error" class="error" for="prodLgu">${errors["prodLgu"]}</label></td>
@@ -37,10 +37,10 @@
 			<tr>
 				<th>거래처 코드</th>
 				<td><select name="prodBuyer">
-						<option value>거래처</option>
+						<option >거래처</option>
 						<c:if test="${not empty buyerList }">
 							<c:forEach var="buyerVO" items="${buyerList }">
-								<option value="${buyerVO.buyerId}" class="${buyerVO.buyerLgu }">${buyerVO.buyerName }</option>
+								<option value="${buyerVO.buyerId}" class="${buyerVO.buyerLgu }" ${buyerVO['buyerName'] eq prod.buyer.buyerName? "selected":"" } >${buyerVO.buyerName }</option>
 							</c:forEach>
 						</c:if>
 				</select><label id="prodBuyer-error" class="error" for="prodBuyer">${errors["prodBuyer"]}</label>
@@ -132,31 +132,16 @@
 					class="error" for="prodMileage">${errors["prodMileage"]}</label></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="button" id="addBtn" value="등록하기">
-				<td />
+				<td colspan="2">
+					<input type="button" id="addBtn" value="등록하기">
+					<input type="button" value="목록으로" class="controlBtn" data-gopage="${pageContext.request.contextPath}/prod/prodList.do">
+				</td>
 			</tr>
 		</table>
+		<input type="hidden" name="prodId" value="${prod.prodId}">
 	</form>
 	<jsp:include page="/includee/footer.jsp"></jsp:include>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/prodForm.js"></script>
 
-	<script type="text/javascript">
-		$(function() {
-			let addForm = $("#addForm");
-			$("#addBtn").on("click", function(eve) {
-				eve.preventDefault();
-				addForm.submit();
-				return false;
-			});
-			addForm.validate()
-
-			let prodBuyer = $("select[name='prodBuyer']")
-			let prodLgu = $("select[name='prodLgu']").on("change", function(){
-				let lgu = $(this).val();
-				prodBuyer.find("option").hide();
-				prodBuyer.find("option."+lgu).show();
-				prodBuyer.find("option:first").show();
-			});
-		})
-	</script>
 </body>
 </html>

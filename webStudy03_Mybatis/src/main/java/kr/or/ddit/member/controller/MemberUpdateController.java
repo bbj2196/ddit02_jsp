@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.utils.ValidatorUtils;
+import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
 
 /**
@@ -56,7 +59,7 @@ public class MemberUpdateController extends HttpServlet {
 		MemberVO member = new MemberVO();
 		request.setAttribute("member", member);
 		
-		Map<String, String>errors = new HashMap<>();
+		Map<String, List<String>>errors = new HashMap<>();
 		request.setAttribute("errors", errors);
 		
 		try {
@@ -64,7 +67,8 @@ public class MemberUpdateController extends HttpServlet {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ServletException(e);
 		}
-		boolean valid=validate(member,errors);
+		ValidatorUtils<MemberVO> utils = new ValidatorUtils<>();
+		boolean valid=utils.validate(member, errors,UpdateGroup.class );
 		String viewName = "";
 		
 		if(valid) {
@@ -102,54 +106,5 @@ public class MemberUpdateController extends HttpServlet {
 			request.getRequestDispatcher(prefix+viewName+suffix).forward(request, response);
 		}
 	}
-
-	/**
-	 * Member 테이블의 제약조건에 따른 검증
-	 * @param member
-	 * @param errors
-	 * @return
-	 */
-	private boolean validate(MemberVO member, Map<String, String> errors) {
-		boolean valid = true;
-		if (StringUtils.isBlank(member.getMemId())) {
-			valid = false;
-			errors.put("memId", "회원 ID 누락");
-		}
-		if (StringUtils.isBlank(member.getMemPass())) {
-			valid = false;
-			errors.put("memPass", "비밀 번호 누락");
-		}
-		if (StringUtils.isBlank(member.getMemName())) {
-			valid = false;
-			errors.put("memName", "회원 명 누락");
-		}
-		if (StringUtils.isBlank(member.getMemZip())) {
-			valid = false;
-			errors.put("memZip", "우편 번호 누락");
-		}
-		if (StringUtils.isBlank(member.getMemAdd1())) {
-			valid = false;
-			errors.put("memAdd1", "주소1 누락");
-		}
-		if (StringUtils.isBlank(member.getMemAdd2())) {
-			valid = false;
-			errors.put("memAdd2", "주소2 누락");
-		}
-		if (StringUtils.isBlank(member.getMemMail())) {
-			valid = false;
-			errors.put("memMail", "이메일 주소 누락");
-		}
-		
-		if(StringUtils.isNotBlank(member.getMemMemorialday())) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				sdf.parse(member.getMemMemorialday());
-			} catch (ParseException e) {
-				valid = false;
-				errors.put("memMemorialday","날짜 형식 확인");
-			}
-		}
-		return valid;
-	}
-
+	
 }

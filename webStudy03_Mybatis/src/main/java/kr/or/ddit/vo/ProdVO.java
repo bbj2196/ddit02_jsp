@@ -3,6 +3,15 @@ package kr.or.ddit.vo;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import kr.or.ddit.validate.groups.DeleteGroup;
+import kr.or.ddit.validate.groups.InsertGroup;
+import kr.or.ddit.validate.groups.UpdateGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,22 +29,48 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProdVO {
+	@NotBlank(groups= {DeleteGroup.class,UpdateGroup.class})
 	private String prodId;
+	
+	@NotBlank(groups=InsertGroup.class)
 	private String prodName;
+	
+	@NotBlank(groups=InsertGroup.class)
+	@Size(max=4,min=4)
+	@Pattern(regexp="^P.*")
 	private String prodLgu;
-	private String lprodNm;//////
+
+	@NotBlank(groups=InsertGroup.class)
+	@Size(min=6,max=6)
 	private String prodBuyer;
-	private BuyerVO buyer;////// has a 관계 - 1:1
-	private Integer prodCost;
-	private Integer prodPrice;
-	private Integer prodSale;
+	
+	@NotBlank(groups=InsertGroup.class)
 	private String prodOutline;
-	private String prodDetail;
+	
+	@NotBlank(groups=InsertGroup.class)
 	private String prodImg;
+	
+	@NotNull(groups=InsertGroup.class)
+	@Max(999999999)
+	private Integer prodCost;
+	
+	@NotNull(groups=InsertGroup.class)
+	private Integer prodPrice;
+	
+	@NotNull(groups=InsertGroup.class)
+	private Integer prodSale;
+	
+	@NotNull(groups=InsertGroup.class)
 	private Integer prodTotalstock;
-	private String prodInsdate;
+	
+	@NotNull(groups=InsertGroup.class)
 	private Integer prodProperstock;
+	
+	private String prodInsdate;
+	private String lprodNm;//////
+	private String prodDetail;
 	private String prodSize;
+	private BuyerVO buyer;////// has a 관계 - 1:1
 	private String prodColor;
 	private String prodDelivery;
 	private String prodUnit;

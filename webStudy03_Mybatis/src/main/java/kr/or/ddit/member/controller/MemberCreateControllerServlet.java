@@ -3,6 +3,7 @@ package kr.or.ddit.member.controller;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.utils.ValidatorUtils;
+import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
 
 @WebServlet("/member/create.do")
@@ -38,7 +41,7 @@ public class MemberCreateControllerServlet extends HttpServlet {
 		MemberVO member = new MemberVO();
 		req.setAttribute("member", member);
 		
-		Map<String, String>errors = new HashMap<>();
+		Map<String, List<String>>errors = new HashMap<>();
 		req.setAttribute("errors", errors);
 		
 		try {
@@ -46,7 +49,8 @@ public class MemberCreateControllerServlet extends HttpServlet {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ServletException(e);
 		}
-		boolean valid=validate(member,errors);
+		ValidatorUtils<MemberVO> utils = new ValidatorUtils<>();
+		boolean valid=utils.validate(member, errors,InsertGroup.class );
 		String viewName = "";
 		
 		if(valid) {
@@ -89,15 +93,5 @@ public class MemberCreateControllerServlet extends HttpServlet {
 		}
 	}
 
-	private boolean validate(MemberVO member, Map<String, String> errors) {
-		boolean valid = true;
-		if(StringUtils.isBlank(member.getMemId())){valid=false;errors.put("memId","회원 ID 누락");}
-		if(StringUtils.isBlank(member.getMemPass())){valid=false;errors.put("memPass","비밀 번호 누락");}
-		if(StringUtils.isBlank(member.getMemName())){valid=false;errors.put("memName","회원 명 누락");}
-		if(StringUtils.isBlank(member.getMemZip())){valid=false;errors.put("memZip","우편 번호 누락");}
-		if(StringUtils.isBlank(member.getMemAdd1())){valid=false;errors.put("memAdd1","주소1 누락");}
-		if(StringUtils.isBlank(member.getMemAdd2())){valid=false;errors.put("memAdd2","주소2 누락");}
-		if(StringUtils.isBlank(member.getMemMail())){valid=false;errors.put("memMail","이메일 주소 누락");}
-		return valid;
-	}
+
 }

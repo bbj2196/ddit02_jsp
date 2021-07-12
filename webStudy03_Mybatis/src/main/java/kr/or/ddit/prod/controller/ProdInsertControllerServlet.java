@@ -20,6 +20,8 @@ import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
+import kr.or.ddit.utils.ValidatorUtils;
+import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;
 
@@ -58,7 +60,7 @@ public class ProdInsertControllerServlet extends HttpServlet {
 		String viewName="";
 		Map<String, String[]> params = request.getParameterMap();
 		ProdVO prod = new ProdVO();
-		Map<String, Object> errors = new HashMap<>();
+		Map<String, List<String>> errors = new HashMap<>();
 		
 		request.setAttribute("prod", prod);
 		try {
@@ -67,7 +69,9 @@ public class ProdInsertControllerServlet extends HttpServlet {
 			throw new ServletException(e);
 		}
 		
-		boolean valid = validate(prod,errors);
+		ValidatorUtils<ProdVO> validator = new ValidatorUtils<ProdVO>();
+		boolean valid = validator.validate(prod, errors , InsertGroup.class);
+
 		if(valid) {
 		ServiceResult result = service.createProd(prod);
 		String message = null;
@@ -101,22 +105,5 @@ public class ProdInsertControllerServlet extends HttpServlet {
 		}
 	}
 
-	private boolean validate(ProdVO prod,Map<String, Object> errors) {
-		boolean valid = true;
-		
-		
-		if(StringUtils.isBlank(prod.getProdName())){valid=false;errors.put("prodName","상품 명 누락");}
-		if(StringUtils.isBlank(prod.getProdLgu())){valid=false;errors.put("prodLgu","상품 분류 코드 누락");}
-		if(StringUtils.isBlank(prod.getProdBuyer())){valid=false;errors.put("prodBuyer","거래처 코드 누락");}
-		if(StringUtils.isBlank(prod.getProdOutline())){valid=false;errors.put("prodOutline","상품 개략 설명 누락");}
-		if(StringUtils.isBlank(prod.getProdImg())){valid=false;errors.put("prodImg","이미지(소) 누락");}
-		if(prod.getProdCost() == null){valid=false;errors.put("prodCost","매입가 누락");}
-		if(prod.getProdPrice()== null){valid=false;errors.put("prodPrice","소비자가 누락");}
-		if(prod.getProdSale()== null){valid=false;errors.put("prodSale","판매가 누락");}
-		if(prod.getProdTotalstock()== null){valid=false;errors.put("prodTotalstock","재고수량 누락");}
-		if(prod.getProdProperstock()== null){valid=false;errors.put("prodProperstock","안전 재고 수량 누락");}
-		
-		return valid;
-	}
 
 }

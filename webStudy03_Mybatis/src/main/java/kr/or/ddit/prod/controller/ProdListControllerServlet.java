@@ -80,7 +80,7 @@ public class ProdListControllerServlet extends HttpServlet {
 		request.setAttribute("lprodList", lprodList);
 		
 		if(viewName.startsWith("redirect:")) {
-			viewName.substring("rediect:".length());
+			viewName=viewName.substring("redirect:".length());
 			response.sendRedirect(request.getContextPath()+viewName);
 		}else {
 			String prefix = "/WEB-INF/views/";

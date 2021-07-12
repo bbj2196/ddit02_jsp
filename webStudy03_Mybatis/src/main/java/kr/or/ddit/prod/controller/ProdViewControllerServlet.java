@@ -32,7 +32,7 @@ public class ProdViewControllerServlet extends HttpServlet {
 		
 		try {
 		ProdVO prod = service.retrieveProd(prodId);
-		request.setAttribute("prodVO", prod);
+		request.setAttribute("prod", prod);
 		}catch(DataNotFoundException e) {
 			response.sendError(400,"해당 상품은 없는 상품입니다");
 			return;

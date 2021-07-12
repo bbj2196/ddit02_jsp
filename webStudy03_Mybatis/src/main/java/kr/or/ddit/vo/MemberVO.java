@@ -7,7 +7,13 @@ import java.util.Set;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
+import kr.or.ddit.validate.contraints.TelNumber;
+import kr.or.ddit.validate.groups.DeleteGroup;
+import kr.or.ddit.validate.groups.InsertGroup;
+import kr.or.ddit.validate.groups.UpdateGroup;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +23,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+
+
 /**
  * 회원관리를 위한 Domain Layer
  * MyBatis (DataMapper, ORM)을 이용한 테이블 조인방법
@@ -50,22 +59,29 @@ public class MemberVO implements Serializable{
 		this.memPass = memPass;
 	}
 	
-	@NotBlank
+	@NotBlank(groups= {Default.class,DeleteGroup.class})
 	private String memId;
 	@NotBlank
+	@Size(min=4,max=12)
+	@NotBlank(groups= {Default.class,DeleteGroup.class})
 	private String memPass;
 	@NotBlank
 	private String memName;
+	@NotBlank(groups=InsertGroup.class)
 	private String memRegno1;
+	@NotBlank(groups=InsertGroup.class)
 	private String memRegno2;
-	@Pattern(regexp="\\d{4}-\\d{2}-\\\\d{2}")
+	@Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
 	private String memBir;
 	private String memZip;
 	private String memAdd1;
 	private String memAdd2;
+	@TelNumber
 	private String memHometel;
+	@TelNumber
 	private String memComtel;
 	@NotBlank
+	@TelNumber
 	private String memHp;
 	@NotBlank
 	@Email

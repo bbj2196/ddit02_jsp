@@ -12,87 +12,95 @@
 		<tbody>
 			<tr>
 				<th>상품 코드</th>
-				<td>${prodVO.prodId}</td>
+				<td>${prod.prodId}</td>
 			</tr>
 			<tr>
 				<th>상품 명</th>
-				<td>${prodVO.prodName}</td>
+				<td>${prod.prodName}</td>
 			</tr>
 			<tr>
 				<th>상품 분류 코드</th>
-				<td>${prodVO.prodLgu}</td>
+				<td>${prod.prodLgu}</td>
 			</tr>
 			<tr>
 				<th>거래처 코드</th>
-				<td>${prodVO.prodBuyer}</td>
+				<td>${prod.prodBuyer}</td>
 			</tr>
 			<tr>
 				<th>매입가</th>
-				<td>${prodVO.prodCost}</td>
+				<td>${prod.prodCost}</td>
 			</tr>
 			<tr>
 				<th>소비자가</th>
-				<td>${prodVO.prodPrice}</td>
+				<td>${prod.prodPrice}</td>
 			</tr>
 			<tr>
 				<th>판매가</th>
-				<td>${prodVO.prodSale}</td>
+				<td>${prod.prodSale}</td>
 			</tr>
 			<tr>
 				<th>상품 개략 설명</th>
-				<td>${prodVO.prodOutline}</td>
+				<td>${prod.prodOutline}</td>
 			</tr>
 			<tr>
 				<th>상품 상세 설며ㅇ</th>
-				<td>${prodVO.prodDetail}</td>
+				<td>${prod.prodDetail}</td>
 			</tr>
 			<tr>
 				<th>이미지(소)</th>
-				<td>${prodVO.prodImg}</td>
+				<td>${prod.prodImg}</td>
 			</tr>
 			<tr>
 				<th>재고수량</th>
-				<td>${prodVO.prodTotalstock}</td>
+				<td>${prod.prodTotalstock}</td>
 			</tr>
 			<tr>
 				<th>신규일자(등록일)</th>
-				<td>${prodVO.prodInsdate}</td>
+				<td>${prod.prodInsdate}</td>
 			</tr>
 			<tr>
 				<th>안전 재고 수량</th>
-				<td>${prodVO.prodProperstock}</td>
+				<td>${prod.prodProperstock}</td>
 			</tr>
 			<tr>
 				<th>크기</th>
-				<td>${prodVO.prodSize}</td>
+				<td>${prod.prodSize}</td>
 			</tr>
 			<tr>
 				<th>색상</th>
-				<td>${prodVO.prodColor}</td>
+				<td>${prod.prodColor}</td>
 			</tr>
 			<tr>
 				<th>배달 특기 사항</th>
-				<td>${prodVO.prodDelivery}</td>
+				<td>${prod.prodDelivery}</td>
 			</tr>
 			<tr>
 				<th>단위(수량)</th>
-				<td>${prodVO.prodUnit}</td>
+				<td>${prod.prodUnit}</td>
 			</tr>
 			<tr>
 				<th>총 입고 수량</th>
-				<td>${prodVO.prodQtyin}</td>
+				<td>${prod.prodQtyin}</td>
 			</tr>
 			<tr>
 				<th>총 판매 수량</th>
-				<td>${prodVO.prodQtysale}</td>
+				<td>${prod.prodQtysale}</td>
 			</tr>
 			<tr>
 				<th>개당 마일리지 점수</th>
-				<td>${prodVO.prodMileage}</td>
+				<td>${prod.prodMileage}</td>
+			</tr>
+			<tr>
+			<td colspan="2">
+				<c:url value="/prod/prodUpdate.do" var="updateURL">
+				<c:param name="what" value="${prod.prodId }"></c:param>
+				</c:url>
+				<a href="${updateURL }">상품 수정</a>
+			</td>
 			</tr>
 			<tr>
 				<th>구매자정보</th>
-				<td><c:set var="memList" value="${prodVO.memberList }"></c:set>
+				<td><c:set var="memList" value="${prod.memberList }"></c:set>
 					<c:if test="${not empty memList}">
 						<c:forEach var="mem" items="${memList}">
 							<table>

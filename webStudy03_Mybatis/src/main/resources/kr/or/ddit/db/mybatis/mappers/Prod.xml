@@ -19,6 +19,7 @@
 		</trim>
 	</sql>
 
+
 	<select id="selectTotalRecord" parameterType="PagingVO" resultType="int">
 		SELECT COUNT(*)
 		<include refid="sameCondition" />
@@ -119,6 +120,35 @@
 		)
 		
 	</insert>
+	
+	<update id="updateProd" parameterType="ProdVO">
+	
+	update 
+	    prod
+	set                 
+	    prod_name      =#{prodName,jdbcType=VARCHAR},      
+	    prod_lgu       =#{prodLgu,jdbcType=CHAR},          
+	    prod_buyer     =#{prodBuyer,jdbcType=CHAR},        
+	    prod_cost      =#{prodCost,jdbcType=INTEGER},      
+	    prod_price     =#{prodPrice,jdbcType=INTEGER},     
+	    prod_sale      =#{prodSale,jdbcType=INTEGER},      
+	    prod_outline   =#{prodOutline,jdbcType=VARCHAR},   
+	    prod_detail    =#{prodDetail,jdbcType=CLOB},       
+	    prod_img       =#{prodImg,jdbcType=VARCHAR},       
+	    prod_totalstock=#{prodTotalstock,jdbcType=INTEGER},
+	    prod_properstock=#{prodProperstock,jdbcType=INTEGER},
+	    prod_size      = #{prodSize,jdbcType=VARCHAR},       
+	    prod_color     = #{prodColor,jdbcType=VARCHAR},      
+	    prod_delivery  = #{prodDelivery,jdbcType=VARCHAR},   
+	    prod_unit      = #{prodUnit,jdbcType=VARCHAR},       
+	    prod_qtyin     = #{prodQtyin,jdbcType=INTEGER},      
+	    prod_qtysale   = #{prodQtysale,jdbcType=INTEGER},    
+	    prod_mileage    =#{prodMileage,jdbcType=INTEGER}     
+	where
+	    prod_id        =#{prodId} 
+	    
+	
+	</update>
 </mapper>
 
 

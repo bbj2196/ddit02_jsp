@@ -56,7 +56,7 @@
 		<id property="memId" column="MEM_ID" />
 		<collection property="prodList" javaType="java.util.Set" ofType="kr.or.ddit.vo.ProdVO" autoMapping="true">
 			<id property="prodId" column="PROD_ID" />
-			<association property="buyer" autoMapping="true"></association>
+			<association property="buyer" autoMapping="true" ></association>
 		</collection>
 	</resultMap>
 	
