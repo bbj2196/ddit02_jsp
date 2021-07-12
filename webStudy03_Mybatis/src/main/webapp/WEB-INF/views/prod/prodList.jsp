@@ -1,10 +1,6 @@
-<%@page import="kr.or.ddit.vo.BuyerVO"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.List"%>
-<%@page import="kr.or.ddit.vo.ProdVO"%>
-<%@page import="kr.or.ddit.vo.PagingVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,43 +9,28 @@
 <jsp:include page="/includee/preScript.jsp" />
 </head>
 <body>
-<%
-	List<Map<String,Object>> lprodList = (List)request.getAttribute("lprodList");
-	List<BuyerVO> buyerList = (List)request.getAttribute("buyerList");
-%>
-<div id="searchUI" style="border: 5px solid green;">
+
+<div id="searchUI" >
 	<h4>Search UI</h4>
 	분류 : 
 	<select name="prodLgu">
 		<option value>분류</option>
-		<%
-			for(Map<String,Object> lprod : lprodList){
-				%>
-				<option value="<%=lprod.get("lprodGu")%>" >
-					<%=lprod.get("lprodNm") %>
-				</option>
-				<%
-			}
-		%>
+		<c:forEach var="lprod" items="${lprodList}">
+		<option value="${lprod['lprodGu'] }">${lprod["lprodNm"] }</option>
+		</c:forEach>
 	</select>
 	거래처 : 
 	<select name="prodBuyer">
 		<option value>거래처</option>
-		<%
-			for(BuyerVO buyer : buyerList){
-				%>
-				<option value="<%=buyer.getBuyerId()%>" class="<%=buyer.getBuyerLgu() %>">
-					<%=buyer.getBuyerName() %>
-				</option>
-				<%
-			}
-		%>
+		<c:forEach var="buyerVO" items="${buyerList }">
+		<option value="${buyerVO.buyerId}" class="${buyerVO.buyerLgu }">${buyerVO.buyerName }</option>
+		</c:forEach>
 	</select>
 	상품명 : <input type="text" name="prodName" value="${pagingVO.detailSearch.prodName }"/>
 	<input type="button" value="검색" id="searchBtn"/>
 </div>
-<table class="table table-bordered mt-3 mb-3">
-	<thead class="thead-dark">
+<table class="table">
+	<thead>
 		<tr>
 			<th>상품명</th>
 			<th>상품분류</th>
@@ -70,15 +51,16 @@
 		</tr>
 	</tfoot>
 </table>
-<form id="searchForm" style="border: 5px solid red;">
+<form id="searchForm" >
 	<h4>Hidden Form</h4>
 	<input type="text" name="page" />
 	<input type="text" name="prodLgu" value="${pagingVO.detailSearch.prodLgu }"/>
 	<input type="text" name="prodBuyer" value="${pagingVO.detailSearch.prodBuyer }"/>
 	<input type="text" name="prodName" value="${pagingVO.detailSearch.prodName }"/>
 </form>
-<script src="<%=request.getContextPath() %>/resources/js/paging.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery.form.min.js"></script>
+
+<script src="${pageContext.request.contextPath }/resources/js/paging.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquery.form.min.js"></script>
 <script type="text/javascript">
 	$(function(){
 		$(document).ajaxComplete(function(event, xhr, options){

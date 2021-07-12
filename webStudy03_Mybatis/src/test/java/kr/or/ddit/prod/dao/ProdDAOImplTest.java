@@ -23,6 +23,31 @@ public class ProdDAOImplTest {
 	}
 
 	@Test
+	public void testinsert() {
+		ProdVO prod = ProdVO.builder()
+								.prodId("prodId")
+								.prodName("prodName")
+								.prodLgu("P101")
+								.prodBuyer("P10101")
+								.prodCost(111111)
+								.prodPrice(222222)
+								.prodSale(333333)
+								.prodOutline("prodOutline")
+								.prodImg("prodImg")
+								.prodTotalstock(555555)
+								.prodInsdate("2020-07-07")
+								.prodProperstock(666666)
+								.prodSize("prodSize")
+								.prodColor("prodColor")
+								.prodDelivery("prodDelivery")
+								.prodUnit("Unit")
+						.build();
+		
+		assertEquals(1,dao.insertProd(prod));
+	}
+	
+	
+	@Test
 	public void testSelectProd() {
 /*		ProdVO prod = dao.selectProd("P101000001");
 		assertNotNull(prod);
@@ -42,15 +67,15 @@ public class ProdDAOImplTest {
 	
 	@Test
 	public void testListProd() {
-		ProdVO caseProd = new ProdVO();
-		caseProd.setProdLgu("P101");
-		caseProd.setProdBuyer("P10101");
-		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
-		paging.setCurrentPage(2);
-//		paging.setDetailSearch(caseProd);
-		
-		List<ProdVO> list = dao.selectProdList(paging);
-		assertNotNull(list);
+//		ProdVO caseProd = new ProdVO();
+//		caseProd.setProdLgu("P101");
+//		caseProd.setProdBuyer("P10101");
+//		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
+//		paging.setCurrentPage(2);
+////		paging.setDetailSearch(caseProd);
+//		
+//		List<ProdVO> list = dao.selectProdList(paging);
+//		assertNotNull(list);
 		
 				
 	}

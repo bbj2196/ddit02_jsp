@@ -62,6 +62,7 @@ public class ProdListControllerServlet extends HttpServlet {
 		String accept = request.getHeader("accept");
 		
 		if(StringUtils.containsIgnoreCase(accept, "json")) {
+			
 			response.setContentType("application/json;charset=utf-8");
 			
 			ObjectMapper mapper = new ObjectMapper();

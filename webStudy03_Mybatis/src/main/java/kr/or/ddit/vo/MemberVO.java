@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,18 +49,26 @@ public class MemberVO implements Serializable{
 		this.memId = memId;
 		this.memPass = memPass;
 	}
+	
+	@NotBlank
 	private String memId;
+	@NotBlank
 	private String memPass;
+	@NotBlank
 	private String memName;
 	private String memRegno1;
 	private String memRegno2;
+	@Pattern(regexp="\\d{4}-\\d{2}-\\\\d{2}")
 	private String memBir;
 	private String memZip;
 	private String memAdd1;
 	private String memAdd2;
 	private String memHometel;
 	private String memComtel;
+	@NotBlank
 	private String memHp;
+	@NotBlank
+	@Email
 	private String memMail;
 	private String memJob;
 	private String memLike;
@@ -66,4 +78,8 @@ public class MemberVO implements Serializable{
 	private Boolean memDelete; // null 값 처리를 위해 wraper클래스 사용
 	
 	private Set<ProdVO> prodList; // has many 관계 - 1: N
+	
+	public String getMemTest() {
+		return "테스트";
+	}
 }

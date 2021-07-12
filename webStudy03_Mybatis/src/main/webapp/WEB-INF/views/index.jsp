@@ -7,7 +7,8 @@
 <%
 request.setCharacterEncoding("utf-8");
 MemberVO user = (MemberVO)session.getAttribute("authMember");
-String message = (String)request.getAttribute("message");
+String message = (String)session.getAttribute("message");
+session.removeAttribute("message");
 if(message!=null && !message.isEmpty()){
 	out.println(message);
 }

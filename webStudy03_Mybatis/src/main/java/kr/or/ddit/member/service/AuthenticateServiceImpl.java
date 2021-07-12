@@ -8,6 +8,7 @@ import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundExecption;
 import kr.or.ddit.member.dao.MemberDAO;
 import kr.or.ddit.member.dao.MemberDaoImpl;
+import kr.or.ddit.utils.EncryptUtils;
 import kr.or.ddit.vo.MemberVO;
 
 public class AuthenticateServiceImpl implements AuthenticateService {

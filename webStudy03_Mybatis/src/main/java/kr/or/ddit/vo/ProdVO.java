@@ -3,8 +3,11 @@ package kr.or.ddit.vo;
 import java.util.List;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * 상품관리 Domain Layer
@@ -13,6 +16,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(of="prodId")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProdVO {
 	private String prodId;
 	private String prodName;

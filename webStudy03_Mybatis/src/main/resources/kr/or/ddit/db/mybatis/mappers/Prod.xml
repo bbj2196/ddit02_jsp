@@ -74,6 +74,51 @@
 		FROM PRODALL LEFT OUTER JOIN CARTMEM ON (PROD_ID = CART_PROD)
 		WHERE PROD_ID = #{prod_id}
 	</select>
+	
+	<insert id="insertProd" parameterType="ProdVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="prodId">
+		select #{prodLgu}||LPAD(
+	                to_number(
+	                    nvl(
+	                        substr(
+	                            max(prod_id),5),0)+1),6,0)
+		from prod
+		where prod_lgu=#{prodLgu}
+		</selectKey>
+		
+		insert into prod
+		(
+		    prod_id,    prod_name,    prod_lgu,
+		    prod_buyer,    prod_cost,    prod_price,
+		    prod_sale,    prod_outline,    prod_detail,
+		    prod_img,    prod_totalstock,    prod_insdate,
+		    prod_properstock,    prod_size,    prod_color,
+		    prod_delivery,    prod_unit,    prod_qtyin,
+		    prod_qtysale,    prod_mileage)
+		values(
+		    #{prodId,jdbcType=VARCHAR},
+		    #{prodName,jdbcType=VARCHAR},
+		    #{prodLgu,jdbcType=CHAR},
+		    #{prodBuyer,jdbcType=CHAR},
+		    #{prodCost,jdbcType=INTEGER},
+		    #{prodPrice,jdbcType=INTEGER},
+		    #{prodSale,jdbcType=INTEGER},
+		    #{prodOutline,jdbcType=VARCHAR},
+		    #{prodDetail,jdbcType=CLOB},
+		    #{prodImg,jdbcType=VARCHAR},
+		    #{prodTotalstock,jdbcType=INTEGER},
+		    sysdate,
+		    #{prodProperstock,jdbcType=INTEGER},
+		    #{prodSize,jdbcType=VARCHAR},
+		    #{prodColor,jdbcType=VARCHAR},
+		    #{prodDelivery,jdbcType=VARCHAR},
+		    #{prodUnit,jdbcType=VARCHAR},
+		    #{prodQtyin,jdbcType=INTEGER},
+		    #{prodQtysale,jdbcType=INTEGER},
+		    #{prodMileage,jdbcType=INTEGER}
+		)
+		
+	</insert>
 </mapper>
 
 

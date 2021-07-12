@@ -56,6 +56,7 @@ public class MemberCreateControllerServlet extends HttpServlet {
 		case OK:
 			// 마이페이지로 이동,  요청이 완료되었기때문 -> redirect
 			viewName = "redirect:/index.do";
+			req.getSession().setAttribute("message", "회원가입 완료");
 			break;
 		case FAIL:
 			viewName="member/memberForm";

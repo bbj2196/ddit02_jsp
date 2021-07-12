@@ -3,17 +3,16 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <jsp:include page="/includee/preScript.jsp"></jsp:include>
-<%-- <script type="text/javascript" src="<%=request.getContextPath() %>/resources/bootstrap/js/bootstrap.js"></script> --%>
-<%-- <sytle rel="stylesheet" link="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css"></sytle> --%>
+
 </head>
 <body>
-
 <table border="1">
 <thead>
 <tr>
@@ -26,34 +25,27 @@
 </tr>
 </thead>
 <tbody>
-<%
-PagingVO<MemberVO> pagingVO = (PagingVO)request.getAttribute("pagingVO");
-List<MemberVO> list = pagingVO.getDatalist();
 
-if(list != null && list.size()>0){
-for(MemberVO vo : list){
-	%>
-	<tr id="<%=vo.getMemId()%>">
-	<td><%=vo.getMemId() %></td>
-	<td><%=vo.getMemName() %></td>
-	<td><%=vo.getMemAdd1() %></td>
-	<td><%=vo.getMemHp() %></td>
-	<td><%=vo.getMemMail() %></td>
-	<td><%=vo.getMemMileage() %></td>
+<c:set var="dataList" value="${pagingVO.datalist}"></c:set>
+<c:forEach items="${dataList}" var="data">
+<tr id="${ data.memId}">
+	<td>${data.memId}</td>
+	<td>${data.memName}</td>
+	<td>${data.memAdd1}</td>
+	<td>${data.memHp}</td>
+	<td>${data.memMail}</td>
+	<td>${data.memMileage}</td>
 	</tr>
-	
-	<%
-}
-}
-%>
+</c:forEach>
+
 </tbody>
 <tfoot>
 <tr>
 <td colspan="6">
-<%=pagingVO.getPagingHTML() %>
+${pagingVO.pagingHTML}
 <div id="searchUI">
 	<select name="searchType">
-		<option value>전체</option>
+		<option>전체</option>
 		<option value="name">이름</option>
 		<option value="address">지역</option>
 		<option value="hp">휴대폰</option>
@@ -133,7 +125,7 @@ let modal = $("#exampleModal");
 		}
 		let mem_id = trTag.id;
 		$.ajax({
-			url : "<%=request.getContextPath()%>/member/memberView.do",
+			url : "${pageContext.request.contextPath}/member/memberView.do",
 			data:{"who":mem_id},
 			method : "post",
 			dataType : "html",

@@ -2,6 +2,8 @@ package kr.or.ddit.member.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -55,7 +57,7 @@ public class MemberListControllerServlet extends HttpServlet {
 		
 		int totalrecord = service.retrieveMemberCount(paging);
 		List<MemberVO> list =service.retrieveMemberList(paging);
-		
+
 		paging.setDatalist(list);
 		paging.setTotalRecord(totalrecord);
 		request.setAttribute("pagingVO", paging);
