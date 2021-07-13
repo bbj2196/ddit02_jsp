@@ -2,7 +2,6 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 import kr.or.ddit.vo.BuyerVO;

@@ -11,11 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Validator;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
 import kr.or.ddit.enumtype.ServiceResult;
@@ -24,7 +22,6 @@ import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.utils.ValidatorUtils;
-import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;

@@ -1,6 +1,5 @@
 package kr.or.ddit.designpattern;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

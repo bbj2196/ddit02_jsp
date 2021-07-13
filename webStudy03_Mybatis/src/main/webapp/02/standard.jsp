@@ -23,10 +23,10 @@
 				<script type="text/javascript">
 // 				자바스크립트 주석
 				</script>
-				<style>
+<!-- 				<style> -->
 /* 				table{ */
 /* 				} */
-				</style>
+<!-- 				</style> -->
 			- server side comment : Java,Jsp
 			<%
  			//싱글라인

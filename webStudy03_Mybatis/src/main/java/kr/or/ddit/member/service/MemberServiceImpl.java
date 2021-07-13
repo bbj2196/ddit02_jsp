@@ -1,6 +1,5 @@
 package kr.or.ddit.member.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import kr.or.ddit.enumtype.ServiceResult;
@@ -49,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberVO> retrieveMemberList(PagingVO paging) {
+	public List<MemberVO> retrieveMemberList(PagingVO<MemberVO> paging) {
 		return dao.selectMemeberList(paging);
 	}
 
@@ -100,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int retrieveMemberCount(PagingVO paging) {
+	public int retrieveMemberCount(PagingVO<MemberVO> paging) {
 		return dao.selectTotalRecord(paging);
 	}
 

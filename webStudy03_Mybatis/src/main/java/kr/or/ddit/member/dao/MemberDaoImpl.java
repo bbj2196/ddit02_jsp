@@ -1,17 +1,10 @@
 package kr.or.ddit.member.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import kr.or.ddit.db.ConnectionFactory;
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingVO;
@@ -48,7 +41,7 @@ public class MemberDaoImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<MemberVO> selectMemeberList(PagingVO paging) {
+	public List<MemberVO> selectMemeberList(PagingVO<MemberVO> paging) {
 		
 		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
 			return sqlSession.selectList("kr.or.ddit.member.dao.MemberDAO.selectMemeberList",paging);
@@ -86,7 +79,7 @@ public class MemberDaoImpl implements MemberDAO {
 
 
 	@Override
-	public int selectTotalRecord(PagingVO pagingVO) {
+	public int selectTotalRecord(PagingVO<MemberVO> pagingVO) {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
 					MemberDAO mapper = sqlSession.getMapper(MemberDAO.class);
 					return mapper.selectTotalRecord(pagingVO);

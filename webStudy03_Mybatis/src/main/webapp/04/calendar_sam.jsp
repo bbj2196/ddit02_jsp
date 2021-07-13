@@ -92,7 +92,7 @@ String optionPtrn = "<option %s value='%s'>%s</option>";
 </h4>
 <input type="number" name="year" placeholder="<%=year %>" value="<%=year %>"/>
 <select name="month">
-	<option value>월 선택</option>
+	<option>월 선택</option>
 	<%
 	
 	String[] months = dfs.getMonths();

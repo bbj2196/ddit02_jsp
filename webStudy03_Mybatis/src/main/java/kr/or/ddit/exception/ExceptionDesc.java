@@ -32,13 +32,13 @@ public class ExceptionDesc {
 		
 	}
 	private static void test1() {
-		if(1==1) {
+//		if(1==1) {
 			try {
 				throw new IOException("강제발생");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+//		}
 	}
 }

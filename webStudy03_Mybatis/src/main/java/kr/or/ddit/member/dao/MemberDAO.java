@@ -20,9 +20,9 @@ public interface MemberDAO {
 	public MemberVO selectMemberById(String mem_id);
 	
 	public int insertMember(MemberVO member);
-	public List<MemberVO> selectMemeberList(PagingVO paging);
+	public List<MemberVO> selectMemeberList(PagingVO<MemberVO> paging);
 	public MemberVO selectMemberDetail(String mem_id);
 	public int updateMember(MemberVO member);
 	public int deleteMember(String mem_id);
-	public int selectTotalRecord(PagingVO pagingVO);
+	public int selectTotalRecord(PagingVO<MemberVO> pagingVO);
 }

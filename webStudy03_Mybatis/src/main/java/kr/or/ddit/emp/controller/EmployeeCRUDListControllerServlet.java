@@ -2,9 +2,6 @@ package kr.or.ddit.emp.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.ddit.emp.service.EmployeeService;
 import kr.or.ddit.emp.service.EmployeeServiceImpl;
 import kr.or.ddit.exception.UserNotFoundExecption;
-import kr.or.ddit.vo.EmployWrapper;
 import kr.or.ddit.vo.EmployeeVO;
 
 @WebServlet("/employee/empCRUD.do")

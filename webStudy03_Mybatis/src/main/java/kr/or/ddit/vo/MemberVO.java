@@ -1,7 +1,6 @@
 package kr.or.ddit.vo;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.Email;
@@ -13,15 +12,12 @@ import javax.validation.groups.Default;
 import kr.or.ddit.validate.contraints.TelNumber;
 import kr.or.ddit.validate.groups.DeleteGroup;
 import kr.or.ddit.validate.groups.InsertGroup;
-import kr.or.ddit.validate.groups.UpdateGroup;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 

@@ -1,9 +1,5 @@
 package kr.or.ddit.member.service;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundExecption;
 import kr.or.ddit.member.dao.MemberDAO;

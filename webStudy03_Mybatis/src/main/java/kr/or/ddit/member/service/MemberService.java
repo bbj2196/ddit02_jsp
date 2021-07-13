@@ -20,14 +20,14 @@ public interface MemberService {
 	 * @param pagingVO
 	 * @return
 	 */
-	public int retrieveMemberCount(PagingVO paging);
+	public int retrieveMemberCount(PagingVO<MemberVO> paging);
 	
 	/**
 	 * 페이징 처리를 위해 구간별 데이터를 조회
 	 * @param paging
 	 * @return
 	 */
-	public List<MemberVO> retrieveMemberList(PagingVO paging);
+	public List<MemberVO> retrieveMemberList(PagingVO<MemberVO> paging);
 	
 	/**
 	 * 

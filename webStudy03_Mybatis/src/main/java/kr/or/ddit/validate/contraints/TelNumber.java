@@ -1,6 +1,5 @@
 package kr.or.ddit.validate.contraints;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import  static java.lang.annotation.RetentionPolicy.*;
 
@@ -9,7 +8,6 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.groups.Default;
 
 /**
  * 전화번호 형식 확인을 위한 검증 어노테이션

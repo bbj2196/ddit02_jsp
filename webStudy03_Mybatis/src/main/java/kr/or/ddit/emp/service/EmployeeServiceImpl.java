@@ -11,7 +11,6 @@ import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundExecption;
 import kr.or.ddit.vo.EmployWrapper;
 import kr.or.ddit.vo.EmployeeVO;
-import sun.security.jca.GetInstance;
 
 public class EmployeeServiceImpl implements EmployeeService {
 

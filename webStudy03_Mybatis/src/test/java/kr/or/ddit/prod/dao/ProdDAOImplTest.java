@@ -2,17 +2,12 @@ package kr.or.ddit.prod.dao;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import kr.or.ddit.vo.BuyerVO;
-import kr.or.ddit.vo.MemberVO;
-import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
 public class ProdDAOImplTest {

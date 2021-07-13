@@ -1,7 +1,6 @@
 package kr.or.ddit.vo;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;

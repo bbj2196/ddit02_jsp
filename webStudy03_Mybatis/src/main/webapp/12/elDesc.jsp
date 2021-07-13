@@ -51,7 +51,7 @@
     		$(true and true), $("true" and "true") , null은 false취급
     	비교 : >(gt) , <(lt) , >=(ge), <=(le) , ==(eq), !=(ne)
     			${ 3 gt abc}, ${true ne false }, ${sampleAttr eq "데이터" }
-    	단항 : empty  자바의 isBlank랑 같다  null이 아니면 크기값도 체크해 비어있다면 true 반환<%List list = new ArrayList();request.setAttribute("List", list); %>
+    	단항 : empty  자바의 isBlank랑 같다  null이 아니면 크기값도 체크해 비어있다면 true 반환<%List<Object> list = new ArrayList<>();request.setAttribute("List", list); %>
     		${empty sample }, ${empty list }
     	삼항 :  조건식 ? 참 : 거짓 
     		${empty abc ? "있다" : "없다"}
