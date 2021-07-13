@@ -16,6 +16,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.enumtype.ServiceResult;
+import kr.or.ddit.multipart.MultipartFile;
+import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
@@ -55,11 +57,14 @@ public class ProdInsertControllerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		String viewName="";
-		Map<String, String[]> params = request.getParameterMap();
 		ProdVO prod = new ProdVO();
+		if(request instanceof StandardMultipartHttpServletRequest) {
+			MultipartFile prodImage = ((StandardMultipartHttpServletRequest)request).getFile("prodImage");
+			prod.setProdImage(prodImage);
+		}
+		Map<String, String[]> params = request.getParameterMap();
 		Map<String, List<String>> errors = new HashMap<>();
 		
 		request.setAttribute("prod", prod);

@@ -94,4 +94,6 @@ public class MemberVO implements Serializable{
 	public String getMemTest() {
 		return "테스트";
 	}
+	
+	private String memRole;
 }

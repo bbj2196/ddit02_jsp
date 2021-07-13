@@ -55,9 +55,12 @@ public class LoginCheckServlet extends HttpServlet {
 		Object resultValue = service.authenticate(param);
 		if(resultValue instanceof MemberVO) {
 			//	1)성공 : welcome page로 이동(redirect)
-			goPage="/";
+			goPage=(String) session.getAttribute("savedRequestURL");
+			session.removeAttribute("savedRequestURL");
+			if(StringUtils.isBlank(goPage)) {
+				goPage="/";
+			}
 			redirect=true;
-			// 로그인에 성공하면 웰컴페이지로 이동해서 성공한 이름을 보여줄것
 			session.setAttribute("authMember", resultValue);
 		}else if(resultValue == ServiceResult.DROPEDMEMBER){
 			goPage="/login/loginForm.jsp";

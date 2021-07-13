@@ -35,7 +35,6 @@ public class MemberCreateControllerServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("utf-8");
 		Map<String, String[]> map = req.getParameterMap();
 		
 		MemberVO member = new MemberVO();

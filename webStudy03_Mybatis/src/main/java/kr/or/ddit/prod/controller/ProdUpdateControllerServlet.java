@@ -17,6 +17,8 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
 import kr.or.ddit.enumtype.ServiceResult;
+import kr.or.ddit.multipart.MultipartFile;
+import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
@@ -56,10 +58,13 @@ public class ProdUpdateControllerServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정하기
-		req.setCharacterEncoding("utf-8");
 		String message = null;
 		String viewName="prod/prodForm";
 		ProdVO prod = new ProdVO();
+		if(req instanceof StandardMultipartHttpServletRequest) {
+			MultipartFile prodImage = ((StandardMultipartHttpServletRequest)req).getFile("prodImage");
+			prod.setProdImage(prodImage);
+		}
 		Map<String, String[]> params = req.getParameterMap();
 		try {
 			BeanUtils.populate(prod, params);

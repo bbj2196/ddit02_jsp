@@ -16,7 +16,7 @@
 </head>
 <body>
 
-	<form action="" method="post" id="addForm">
+	<form action="" method="post" id="addForm" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>상품 명</th>
@@ -76,7 +76,9 @@
 			</tr>
 			<tr>
 				<th>이미지(소)</th>
-				<td><input type="text" required name="prodImg" value="${prod.prodImg}"><label
+				<td>
+				<input type="file" name="prodImage"><br>
+				<input type="text" required name="prodImg" value="${prod.prodImg}"><label
 					id="prodImg-error" class="error" for="prodImg">${errors["prodImg"]}</label></td>
 			</tr>
 			<tr>

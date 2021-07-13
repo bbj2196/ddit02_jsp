@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.ddit.member.dao.MemberDAO">
 	<select id="selectMemberById" parameterType="string" resultType="MemberVO">
-		select mem_id, mem_name, mem_pass
+		select mem_id, mem_name, mem_pass,mem_role
 		from member
 		where mem_id=
 		#{mem_id}
@@ -41,7 +41,7 @@
 		select
 		mem_id,mem_pass,mem_name,mem_regno1,mem_regno2,mem_bir,
 		mem_zip,mem_add1,mem_add2,mem_hometel,mem_comtel,mem_hp,mem_mail,
-		mem_job,mem_like,mem_memorial,mem_memorialday,mem_mileage,mem_delete
+		mem_job,mem_like,mem_memorial,mem_memorialday,mem_mileage,mem_delete.mem_role
 		from member
 		<include refid="searchFrag"></include>
 		order by rowid desc
@@ -78,7 +78,7 @@
 			mem_comtel,mem_hp,mem_mail,mem_job,
 			mem_like,mem_memorial,
 			to_char(mem_memorialday,'YYYY-MM-DD')as mem_memorialday,
-			mem_mileage,mem_delete
+			mem_mileage,mem_delete,mem_role
 			,cartprod.*
 		from member left outer join cartprod on(mem_id = cart_member)
 		where mem_id =#{mem_id}
@@ -99,8 +99,8 @@
 		MEM_LIKE= #{memLike,jdbcType=VARCHAR},
 		MEM_MEMORIAL= #{memMemorial,jdbcType=VARCHAR},
 		MEM_MEMORIALDAY= TO_DATE(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD')
-		WHERE MEM_ID=
-		#{memId,jdbcType=VARCHAR}
+		WHERE 
+		MEM_ID=	#{memId,jdbcType=VARCHAR}
 	</update>
 
 	<delete id="deleteMember" parameterType="string">
@@ -119,7 +119,7 @@
 			MEM_COMTEL,	MEM_HP,
 			MEM_MAIL,	MEM_JOB,
 			MEM_LIKE,	MEM_MEMORIAL,
-			MEM_MEMORIALDAY
+			MEM_MEMORIALDAY, MEM_ROLE
 	)
 	values(
 		#{memId,jdbcType=VARCHAR},   	#{memPass,jdbcType=VARCHAR},
@@ -130,7 +130,7 @@
 		#{memComtel,jdbcType=VARCHAR},	#{memHp,jdbcType=VARCHAR},
 		#{memMail,jdbcType=VARCHAR},	#{memJob,jdbcType=VARCHAR},
 		#{memLike,jdbcType=VARCHAR},	#{memMemorial,jdbcType=VARCHAR},
-		to_date(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD')
+		to_date(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD'), 'ROLE_USER'
 	)
 	
 	</insert>

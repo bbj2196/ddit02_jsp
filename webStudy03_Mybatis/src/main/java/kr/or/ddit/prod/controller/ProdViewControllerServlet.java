@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
+import kr.or.ddit.filter.wrapper.SampleHttpServletRequestWrapper;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.vo.ProdVO;
@@ -23,6 +24,12 @@ public class ProdViewControllerServlet extends HttpServlet {
 	ProdService service = new ProdServiceImpl();
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		
+		
+		if(request instanceof SampleHttpServletRequestWrapper) {
+			String customData=((SampleHttpServletRequestWrapper) request).getCustomData();
+		}
+		
 		
 		String prodId=request.getParameter("what");
 		if(StringUtils.isBlank(prodId)) {

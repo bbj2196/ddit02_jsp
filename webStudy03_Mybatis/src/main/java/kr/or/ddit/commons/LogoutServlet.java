@@ -25,7 +25,7 @@ public class LogoutServlet extends HttpServlet {
 //		session.removeAttribute("authId");
 		session.invalidate();
 		String message = "로그아웃 성공";
-		session.setAttribute("message", message);
+		request.getSession().setAttribute("message", message);
 		response.sendRedirect(request.getContextPath()+"/");
 	}
 

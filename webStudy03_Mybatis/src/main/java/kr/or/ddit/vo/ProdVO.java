@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.validate.groups.DeleteGroup;
 import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.validate.groups.UpdateGroup;
@@ -47,8 +48,11 @@ public class ProdVO {
 	private String prodOutline;
 	
 	@NotBlank(groups=InsertGroup.class)
-	private String prodImg;
-	
+	private String prodImg; // DB communication
+	private MultipartFile prodImage; // Client communication
+	public void setProdImage(MultipartFile prodImage) {
+		this.prodImage = prodImage;
+	}
 	@NotNull(groups=InsertGroup.class)
 	@Max(999999999)
 	private Integer prodCost;

@@ -48,7 +48,6 @@ public class MemberUpdateController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
 		Map<String, String[]> map = request.getParameterMap();
 		
 		MemberVO member = new MemberVO();
