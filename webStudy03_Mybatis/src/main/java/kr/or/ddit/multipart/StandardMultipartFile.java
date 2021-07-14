@@ -20,9 +20,7 @@ public class StandardMultipartFile implements MultipartFile{
 		this.adaptee = adaptee;
 	}
 
-	public int asd() {
-		return 1;
-	}
+
 	private String extractFileName(String disposition) {
 //		form-data; name="filePart"; filename=""
 		if(StringUtils.isBlank(disposition)) {

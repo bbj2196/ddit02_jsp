@@ -9,8 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CharacterEncodingFilter implements Filter {
 
+	private static Logger logger = LoggerFactory.getLogger(CharacterEncodingFilter.class);
 	private String encoding;
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -18,6 +22,7 @@ public class CharacterEncodingFilter implements Filter {
 		if(encoding == null || encoding.isEmpty()) {
 			encoding = "UTF-8";
 		}
+		logger.info("인코딩 설정 : {}\t{}",encoding,getClass().getSimpleName());
 	}
 
 	@Override
