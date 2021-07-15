@@ -78,8 +78,8 @@
 				<th>이미지(소)</th>
 				<td>
 				<input type="file" name="prodImage"><br>
-				<input type="text" required name="prodImg" value="${prod.prodImg}"><label
-					id="prodImg-error" class="error" for="prodImg">${errors["prodImg"]}</label></td>
+<%-- 				<input type="text" required name="prodImg" value="${prod.prodImg}"> --%>
+				<label id="prodImage-error" class="error" for="prodImage">${errors["prodImage"]}</label></td>
 			</tr>
 			<tr>
 				<th>재고수량</th>

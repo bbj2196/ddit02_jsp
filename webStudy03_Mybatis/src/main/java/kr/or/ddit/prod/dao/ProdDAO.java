@@ -2,6 +2,8 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
@@ -15,9 +17,10 @@ public interface ProdDAO {
 	/**
 	 * 신규 상품 등록
 	 * @param prod PK를 제외한 나머지 상품 데이터
+	 * @param sqlSession TODO
 	 * @return rowcnt > 0 성공, PK는 call by ref로 확인
 	 */
-	public int insertProd(ProdVO prod);
+	public int insertProd(ProdVO prod, SqlSession sqlSession);
 	
 	/**
 	 * 조건에 맞는 Prod를 생성
@@ -38,5 +41,5 @@ public interface ProdDAO {
 	 */
 	public ProdVO selectProd(String prodId);
 	
-	public int updateProd(ProdVO prod);
+	public int updateProd(ProdVO prod, SqlSession sqlSession);
 }

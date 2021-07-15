@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import kr.or.ddit.vo.ProdVO;
  * Servlet implementation class ProdInsertControllerServlet
  */
 @WebServlet("/prod/prodInsert.do")
+@MultipartConfig
 public class ProdInsertControllerServlet extends HttpServlet {
 
 	OthersDAO other = new OthersDAOImpl();
@@ -76,14 +78,14 @@ public class ProdInsertControllerServlet extends HttpServlet {
 		
 		ValidatorUtils<ProdVO> validator = new ValidatorUtils<ProdVO>();
 		boolean valid = validator.validate(prod, errors , InsertGroup.class);
-
+		boolean pass=false;
 		if(valid) {
 		ServiceResult result = service.createProd(prod);
 		String message = null;
 		switch (result) {
 		case OK:
-			viewName="redirect:/prod/prodInsert.do";
-			request.getSession().setAttribute("message", "상품등록 성공");
+			viewName="redirect:/prod/prodView.do?what="+prod.getProdId();
+//			request.getSession().setAttribute("message", "상품등록 성공");
 			break;
 		case FAIL:
 			viewName="prod/prodForm";
@@ -99,14 +101,14 @@ public class ProdInsertControllerServlet extends HttpServlet {
 			viewName="prod/prodForm";
 			request.setAttribute("errors", errors);
 		}
+		
 		if(viewName.startsWith("redirect:")) {
 			viewName = viewName.substring("rediect:".length()+1);
 			response.sendRedirect(request.getContextPath()+viewName);
 		}else {
-//			String prefix = "/WEB-INF/views/";
-//			String suffix = ".jsp";
-//			request.getRequestDispatcher(prefix+viewName+suffix).forward(request, response);
-			doGet(request, response);
+			String prefix = "/WEB-INF/views/";
+			String suffix = ".jsp";
+			request.getRequestDispatcher(prefix+viewName+suffix).forward(request, response);
 		}
 	}
 

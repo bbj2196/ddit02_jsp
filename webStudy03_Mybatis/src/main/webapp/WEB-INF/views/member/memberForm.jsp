@@ -35,7 +35,7 @@
 
 
 
-<form action="" method="post" id="memberForm">
+<form action="" method="post" id="memberForm" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>회원 ID</th>
@@ -54,6 +54,12 @@
 				<td><input type="text" name="memName" required
 					value="${ member.memName}"> <label
 						id="memName-error" class="error" for="memName">${errors["memName"]}</label></td>
+			</tr>
+			<tr>
+			<th>회원이미지</th>
+			<td>
+			<input type="file" name="memImage">
+			</td>
 			</tr>
 			<tr>
 				<th>주민등록번호1</th>

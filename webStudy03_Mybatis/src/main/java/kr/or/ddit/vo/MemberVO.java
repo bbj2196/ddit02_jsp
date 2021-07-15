@@ -1,14 +1,30 @@
 package kr.or.ddit.vo;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
+import org.apache.commons.codec.binary.Base64;
+
+import kr.or.ddit.listener.ContestLoaderListener;
+import kr.or.ddit.multipart.MultipartFile;
+import kr.or.ddit.validate.contraints.FileMime;
 import kr.or.ddit.validate.contraints.TelNumber;
 import kr.or.ddit.validate.groups.DeleteGroup;
 import kr.or.ddit.validate.groups.InsertGroup;
@@ -19,6 +35,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.coobird.thumbnailator.Thumbnailator;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.util.ThumbnailatorUtils;
 
 
 
@@ -43,11 +62,11 @@ import lombok.ToString;
  */
 @Data
 @EqualsAndHashCode(of="memId")
-@ToString(exclude= {"memRegno1","memPass","memRegno2"})
+@ToString(exclude= {"memRegno1","memPass","memRegno2","memImg","memImage","memThumbnail"})
 @NoArgsConstructor
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @Builder
-public class MemberVO implements Serializable{
+public class MemberVO implements Serializable,HttpSessionBindingListener{
 	
 	public MemberVO(String memId, String memPass) {
 		super();
@@ -88,12 +107,92 @@ public class MemberVO implements Serializable{
 	private String memMemorialday;
 	private Integer memMileage;
 	private Boolean memDelete; // null 값 처리를 위해 wraper클래스 사용
-	
 	private Set<ProdVO> prodList; // has many 관계 - 1: N
-	
 	public String getMemTest() {
 		return "테스트";
 	}
-	
 	private String memRole;
+	private String memImg;
+	@FileMime(mime="image/")
+	private transient MultipartFile memImage;
+	private byte[] memThumbnail;
+	
+	public void setMemImage(MultipartFile memImage) throws IOException {
+		if(memImage ==null || memImage.isEmpty()) {
+			return;
+		}
+		this.memImage = memImage;
+//		this.memImg = memImage.getBytes();
+		File memFolder = ContestLoaderListener.memImages;
+		String imageName = UUID.randomUUID().toString();
+		File savedFile = new File(memFolder, imageName);
+		
+		memImage.transferTo(savedFile);
+		memImg = savedFile.getPath();
+		
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();) {
+
+			Thumbnails.of(savedFile).size(100, 100).toOutputStream(bos);
+			memThumbnail = bos.toByteArray();
+		}
+	}
+	public String getBase64Img() {
+		if(memImg==null) {
+			return null;
+		}
+		File origin = new File(memImg);
+		try(
+				FileInputStream fis = new FileInputStream(origin);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				){
+			byte[] buffer = new byte[1024];
+			int idx=-1;
+			while((idx =fis.read(buffer))!=-1) {
+				bos.write(buffer, 0, idx);
+			}
+			return Base64.encodeBase64String(bos.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public String getBase64Thumb() {
+		return Base64.encodeBase64String(memThumbnail);
+	}
+//	public String makeThumnail() {
+//		if(memImg == null || memImg.length() <=0) {return null;}
+//		try(
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//		) {
+//			
+//			File origin = new File(memImg);
+//			Thumbnails.of(origin).size(100, 100).toOutputStream(bos);
+//			byte[] thumb = bos.toByteArray();
+//			return Base64.encodeBase64String(thumb);
+//		} catch (IOException e) {
+//			throw new RuntimeException(e); 
+//		}
+//	}
+	
+	
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
+		String attrName = event.getName();
+		if("authMember".equals(attrName)) {
+			ServletContext application = event.getSession().getServletContext();
+			LinkedHashMap<String, MemberVO> currentUsers=(LinkedHashMap<String, MemberVO>) application.getAttribute("currentUserList");
+			currentUsers.put(memId, this);
+			
+		}
+		
+	}
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		String attrName = event.getName();
+		if("authMember".equals(attrName)) {
+			ServletContext application = event.getSession().getServletContext();
+			LinkedHashMap<String, MemberVO> currentUsers=(LinkedHashMap<String, MemberVO>) application.getAttribute("currentUserList");
+			currentUsers.remove(memId);
+			
+		}		
+	}
 }

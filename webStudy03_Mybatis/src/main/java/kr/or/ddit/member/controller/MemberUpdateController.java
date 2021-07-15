@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.multipart.MultipartFile;
+import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.utils.ValidatorUtils;
 import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
@@ -28,6 +31,7 @@ import kr.or.ddit.vo.MemberVO;
  * 로그인한 유저가 자기정보를 수정함
  */
 @WebServlet("/member/update.do")
+@MultipartConfig
 public class MemberUpdateController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -52,7 +56,10 @@ public class MemberUpdateController extends HttpServlet {
 		
 		MemberVO member = new MemberVO();
 		request.setAttribute("member", member);
-		
+		if(request instanceof StandardMultipartHttpServletRequest) {
+			MultipartFile memImage = ((StandardMultipartHttpServletRequest)request).getFile("memImage");
+			member.setMemImage(memImage);
+		}
 		Map<String, List<String>>errors = new HashMap<>();
 		request.setAttribute("errors", errors);
 		

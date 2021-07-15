@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;
 
 @WebServlet("/prod/prodUpdate.do")
+@MultipartConfig
 public class ProdUpdateControllerServlet extends HttpServlet{
 
 	ProdService service = new ProdServiceImpl();
@@ -91,7 +93,7 @@ public class ProdUpdateControllerServlet extends HttpServlet{
 			switch (result) {
 			case OK:	
 				message="수정 완료";
-				viewName="redirect:/prod/prodList.do";
+				viewName="redirect:/prod/prodView.do?what="+prod.getProdId();
 				break;
 			case FAIL:
 				message="수정 실패 ";

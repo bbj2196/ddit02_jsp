@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.ddit.member.dao.MemberDAO">
 	<select id="selectMemberById" parameterType="string" resultType="MemberVO">
-		select mem_id, mem_name, mem_pass,mem_role
+		select mem_id, mem_name, mem_pass,mem_role,mem_img,mem_thumbnail
 		from member
 		where mem_id=
 		#{mem_id}
@@ -78,7 +78,7 @@
 			mem_comtel,mem_hp,mem_mail,mem_job,
 			mem_like,mem_memorial,
 			to_char(mem_memorialday,'YYYY-MM-DD')as mem_memorialday,
-			mem_mileage,mem_delete,mem_role
+			mem_mileage,mem_delete,mem_role,mem_img,mem_thumbnail
 			,cartprod.*
 		from member left outer join cartprod on(mem_id = cart_member)
 		where mem_id =#{mem_id}
@@ -99,6 +99,10 @@
 		MEM_LIKE= #{memLike,jdbcType=VARCHAR},
 		MEM_MEMORIAL= #{memMemorial,jdbcType=VARCHAR},
 		MEM_MEMORIALDAY= TO_DATE(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD')
+		<if test="memImg != null and memImg.length() gt 0">
+		,MEM_IMG = #{memImg,jdbcType=VARCHAR}
+		,MEM_THUMBNAIL = #{memThumbnail,jdbcType=BLOB}
+		</if>
 		WHERE 
 		MEM_ID=	#{memId,jdbcType=VARCHAR}
 	</update>
@@ -119,7 +123,8 @@
 			MEM_COMTEL,	MEM_HP,
 			MEM_MAIL,	MEM_JOB,
 			MEM_LIKE,	MEM_MEMORIAL,
-			MEM_MEMORIALDAY, MEM_ROLE
+			MEM_MEMORIALDAY, MEM_ROLE,
+			MEM_IMG,MEM_THUMBNAIL
 	)
 	values(
 		#{memId,jdbcType=VARCHAR},   	#{memPass,jdbcType=VARCHAR},
@@ -130,7 +135,8 @@
 		#{memComtel,jdbcType=VARCHAR},	#{memHp,jdbcType=VARCHAR},
 		#{memMail,jdbcType=VARCHAR},	#{memJob,jdbcType=VARCHAR},
 		#{memLike,jdbcType=VARCHAR},	#{memMemorial,jdbcType=VARCHAR},
-		to_date(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD'), 'ROLE_USER'
+		to_date(#{memMemorialday,jdbcType=DATE},'YYYY-MM-DD'), 'ROLE_USER',
+		#{memImg,jdbcType=VARCHAR},#{memThumbnail,jdbcType=BLOB}
 	)
 	
 	</insert>

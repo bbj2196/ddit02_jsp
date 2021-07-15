@@ -48,7 +48,7 @@
 			</tr>
 			<tr>
 				<th>이미지(소)</th>
-				<td>${prod.prodImg}</td>
+				<td><img src="${cPath}${prodImagesUrl }/${prod.prodImg}"></img> </td>
 			</tr>
 			<tr>
 				<th>재고수량</th>
