@@ -1,5 +1,6 @@
 package kr.or.ddit.prod.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -21,27 +22,29 @@ public class ProdServiceImplTest extends TestCase {
 	}
 
 	public void testRetrieveProdList() {
-		ProdVO caseProd = new ProdVO();
-		caseProd.setProdLgu("P101");
-		caseProd.setProdBuyer("P10101");
-		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
-		paging.setCurrentPage(1);
-		paging.setDetailSearch(caseProd);
 		
-		service.retrieveProdList(paging);
-		List<ProdVO> list = paging.getDatalist();
-		assertNotNull(paging.getDatalist());
-		
-		if(list != null) {
-			for (ProdVO prodVO : list) {
-				System.out.println(prodVO);
-			}
-		}
+//		ProdVO caseProd = new ProdVO();
+//		caseProd.setProdLgu("P101");
+//		caseProd.setProdBuyer("P10101");
+//		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
+//		paging.setCurrentPage(1);
+//		paging.setDetailSearch(caseProd);
+//		
+//		service.retrieveProdList(paging);
+//		List<ProdVO> list = paging.getDatalist();
+//		assertNotNull(paging.getDatalist());
+//		
+//		if(list != null) {
+//			for (ProdVO prodVO : list) {
+//				System.out.println(prodVO);
+//			}
+//		}
 		
 	}
 
 	public void testRetrieveProd() {
 		fail("Not yet implemented");
+
 	}
 
 	public void testModifyProd() {

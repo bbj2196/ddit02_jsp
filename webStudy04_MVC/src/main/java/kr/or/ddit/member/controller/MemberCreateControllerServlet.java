@@ -1,66 +1,48 @@
 package kr.or.ddit.member.controller;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.multipart.MultipartFile;
-import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.utils.ValidatorUtils;
 import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
-
-@WebServlet("/member/create.do")
-@MultipartConfig
-public class MemberCreateControllerServlet extends HttpServlet {
+@Controller
+public class MemberCreateControllerServlet {
 
 	private MemberService service = MemberServiceImpl.getInstance();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String dest="/WEB-INF/views/member/memberForm.jsp";
-		req.getRequestDispatcher(dest).forward(req, resp);
+	@RequestMapping("/member/create.do")
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		return "member/memberForm";
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Map<String, String[]> map = req.getParameterMap();
-		
-		MemberVO member = new MemberVO();
+	@RequestMapping(value="/member/create.do",method=RequestMethod.POST)
+	public String doPost(@ModelAttribute("member")MemberVO member,@RequsetPart("memImage") MultipartFile memImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setAttribute("member", member);
-		if(req instanceof StandardMultipartHttpServletRequest) {
-			StandardMultipartHttpServletRequest request = (StandardMultipartHttpServletRequest) req;
-			MultipartFile memImage = request.getFile("memImage");
-			member.setMemImage(memImage);
-		}
+		member.setMemImage(memImage);
 		Map<String, List<String>>errors = new HashMap<>();
+		
 		req.setAttribute("errors", errors);
-		
-		try {
-			BeanUtils.populate(member, map);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ServletException(e);
-		}
-		
 		ValidatorUtils<MemberVO> utils = new ValidatorUtils<>();
 		boolean valid=utils.validate(member, errors,InsertGroup.class );
 		String viewName = "";
-		
+		List<String>list = new ArrayList<String>();
 		if(valid) {
 		ServiceResult result = service.createMember(member);
 		String message = "";
@@ -90,15 +72,8 @@ public class MemberCreateControllerServlet extends HttpServlet {
 			// Form으로 이동,
 			viewName="member/memberForm";
 		}
-		
-		if(viewName.startsWith("redirect:")) {
-			viewName = viewName.substring("rediect:".length()+1);
-			resp.sendRedirect(req.getContextPath()+viewName);
-		}else {
-			String prefix= "/WEB-INF/views/";
-			String suffix= ".jsp";
-			req.getRequestDispatcher(prefix+viewName+suffix).forward(req, resp);
-		}
+		return viewName;
+
 	}
 
 

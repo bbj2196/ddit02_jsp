@@ -127,7 +127,7 @@ let modal = $("#exampleModal");
 		$.ajax({
 			url : "${pageContext.request.contextPath}/member/memberView.do",
 			data:{"who":mem_id},
-			method : "post",
+			method : "get",
 			dataType : "html",
 			success : function(res) {
 				let body = $(modal.find(".modal-body"))

@@ -14,6 +14,7 @@ import kr.or.ddit.mvc.annotation.HandlerMapping;
 import kr.or.ddit.mvc.annotation.RequestMappingHandlerAdapter;
 import kr.or.ddit.mvc.annotation.RequestMappingHandlerMapping;
 import kr.or.ddit.mvc.annotation.RequestMappingInfo;
+import kr.or.ddit.mvc.annotation.resolvers.RequsetPartArgumentResolver;
 
 public class FrontController extends HttpServlet {
 
@@ -32,6 +33,9 @@ public class FrontController extends HttpServlet {
 		viewResolver = new InternalResourceViewResolver();
 		((InternalResourceViewResolver) viewResolver).setPrefix(prefix);
 		((InternalResourceViewResolver) viewResolver).setSuffix(suffix);
+		
+		
+		((RequestMappingHandlerAdapter)handlerAdapter).addArgumentResolvers(new RequsetPartArgumentResolver());
 	}
 
 	@Override
@@ -39,7 +43,7 @@ public class FrontController extends HttpServlet {
 		RequestMappingInfo mappingInfo = handlerMapper.findCommandHandler(req);
 		if (mappingInfo == null) {
 			resp.sendError(404, req.getRequestURI() + "에 대한 핸들러 없음");
-		}
+		}else {
 		String viewName = handlerAdapter.invokeHandler(mappingInfo, req, resp);
 		if (viewName == null) {
 			if (!resp.isCommitted()) {
@@ -47,6 +51,7 @@ public class FrontController extends HttpServlet {
 			}
 		} else {
 			viewResolver.viewResolve(viewName, req, resp);
+		}
 		}
 	}
 

@@ -42,7 +42,7 @@ public class RequsetParamArgumentResolver implements HandlerMethodArgumentResolv
 		if(reqParamValue==null && required) {
 			//400
 			throw new BadRequestException(String.format("%s 타입의 필수 파라미터 누락",parameterType.getName()));
-		}else if(reqParamValue==null) {
+		}else if(reqParamValue==null || reqParamValue.isEmpty()) {
 			reqParamValue=defaultValue;
 		}
 		
@@ -50,18 +50,18 @@ public class RequsetParamArgumentResolver implements HandlerMethodArgumentResolv
 		try {
 			if(byte.class.equals(parameterType) || Byte.class.equals(parameterType)) {
 				parameterValue = Byte.parseByte(reqParamValue);
-			}else if(Short.class.equals(parameterValue)||short.class.equals(parameterValue)) {
+			}else if(Short.class.equals(parameterType)||short.class.equals(parameterType)) {
 				parameterValue = Short.parseShort(reqParamValue);
 				
-			}else if(Integer.class.equals(parameterValue)||int.class.equals(parameterValue)) {
+			}else if(Integer.class.equals(parameterType)||int.class.equals(parameterType)) {
 				parameterValue = Integer.parseInt(reqParamValue);
-			}else if(Long.class.equals(parameterValue)||long.class.equals(parameterValue)) {
+			}else if(Long.class.equals(parameterType)||long.class.equals(parameterType)) {
 				parameterValue = Long.parseLong(reqParamValue);
-			}else if(Float.class.equals(parameterValue)||float.class.equals(parameterValue)) {
+			}else if(Float.class.equals(parameterType)||float.class.equals(parameterType)) {
 				parameterValue = Float.parseFloat(reqParamValue);
-			}else if(Double.class.equals(parameterValue)||double.class.equals(parameterValue)) {
+			}else if(Double.class.equals(parameterType)||double.class.equals(parameterType)) {
 				parameterValue = Double.parseDouble(reqParamValue);
-			}else if(Boolean.class.equals(parameterValue)||Boolean.class.equals(parameterValue)) {
+			}else if(Boolean.class.equals(parameterType)||Boolean.class.equals(parameterType)) {
 				parameterValue = Boolean.parseBoolean(reqParamValue);
 			}else if(Character.class.equals(parameterType)||char.class.equals(parameterType)) {
 				parameterValue=reqParamValue.charAt(0);

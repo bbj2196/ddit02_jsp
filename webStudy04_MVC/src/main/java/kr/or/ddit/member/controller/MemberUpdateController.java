@@ -23,51 +23,48 @@ import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.utils.ValidatorUtils;
 import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.ProdVO;
 
 /**
  * 로그인한 유저가 자기정보를 수정함
  */
-@WebServlet("/member/update.do")
-@MultipartConfig
-public class MemberUpdateController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@Controller
+public class MemberUpdateController {
 	
 	private MemberService service = MemberServiceImpl.getInstance();
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping("/member/update.do")
+	public String doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginMem = (MemberVO) session.getAttribute("authMember");
 		if(loginMem == null || StringUtils.isBlank(loginMem.getMemId())){
 			response.sendRedirect(request.getContextPath()+"/index.do");
-			return;
+			return null;
 		}
 		MemberVO updateMem = service.retrieveMember(loginMem.getMemId());
 		request.setAttribute("member", updateMem);
-		String dest = "/WEB-INF/views/member/memberForm.jsp";
-		request.getRequestDispatcher(dest).forward(request, response);
+		String dest = "member/memberForm";
+		return dest;
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(value="/member/update.do",method=RequestMethod.POST)
+	public String doPost(@ModelAttribute("member")MemberVO member,@RequsetPart("memImage") MultipartFile memImage,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String, String[]> map = request.getParameterMap();
 		
-		MemberVO member = new MemberVO();
 		request.setAttribute("member", member);
-		if(request instanceof StandardMultipartHttpServletRequest) {
-			MultipartFile memImage = ((StandardMultipartHttpServletRequest)request).getFile("memImage");
 			member.setMemImage(memImage);
-		}
 		Map<String, List<String>>errors = new HashMap<>();
 		request.setAttribute("errors", errors);
 		
-		try {
-			BeanUtils.populate(member, map);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ServletException(e);
-		}
 		ValidatorUtils<MemberVO> utils = new ValidatorUtils<>();
 		boolean valid=utils.validate(member, errors,UpdateGroup.class );
 		String viewName = "";
@@ -98,14 +95,7 @@ public class MemberUpdateController extends HttpServlet {
 		}
 		
 		
-		if(viewName.startsWith("redirect:")) {
-			viewName = viewName.substring("rediect:".length()+1);
-			response.sendRedirect(request.getContextPath()+viewName);
-		}else {
-			String prefix= "/WEB-INF/views/";
-			String suffix= ".jsp";
-			request.getRequestDispatcher(prefix+viewName+suffix).forward(request, response);
-		}
+		return viewName;
 	}
 	
 }

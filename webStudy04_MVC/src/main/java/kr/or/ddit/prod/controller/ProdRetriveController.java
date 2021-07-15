@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
 import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
@@ -38,28 +39,21 @@ public class ProdRetriveController{
 	private OthersDAO otherDAO = new OthersDAOImpl();
 	
 	@RequestMapping("/prod/prodList.do")
-	public String prodList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String prodList(
+			@RequestParam(value="page",required=false,defaultValue="1")int currentPage,
+			@ModelAttribute("detailSearch") ProdVO detailSearch,
+			HttpServletRequest request,
+			HttpServletResponse response
+			) throws ServletException, IOException {
 		response.setCharacterEncoding("utf-8");
 		// 검색조건 : 상품명, 상품분류코드ㅏ, 거래처 코드 (상세검색)
 		String viewName="prod/prodList";
 		
-		String prodName = request.getParameter("prodName");
-		String prodLgu = request.getParameter("prodLgu");
-		String prodBuyer = request.getParameter("prodBuyer");
-		String page = request.getParameter("page");
 		
-		ProdVO searchVO = new ProdVO();
-		searchVO.setProdName(prodName);
-		searchVO.setProdLgu(prodLgu);
-		searchVO.setProdBuyer(prodBuyer);
 		
 		PagingVO<ProdVO> paging = new PagingVO<>(5, 2);
-		paging.setDetailSearch(searchVO);
-		int curPage = 1;
-		if(StringUtils.isNumeric(page)) {
-			curPage = Integer.parseInt(page);
-		}
-		paging.setCurrentPage(curPage);
+		paging.setDetailSearch(detailSearch);
+		paging.setCurrentPage(currentPage);
 		service.retrieveProdList(paging);
 		List<BuyerVO> buyerList = otherDAO.selectBuyerList();
 		List<Map<String, Object>> lprodList = otherDAO.selectLprodList();

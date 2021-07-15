@@ -51,6 +51,7 @@
 		</tr>
 	</tfoot>
 </table>
+<input type="button" value="등록하기" id="regist">
 <form id="searchForm" >
 	<h4>Hidden Form</h4>
 	<input type="text" name="page" />
@@ -63,6 +64,9 @@
 <script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquery.form.min.js"></script>
 <script type="text/javascript">
 	$(function(){
+		$("#regist").on("click",function(){
+			location.href="${pageContext.request.contextPath }/prod/prodInsert.do"
+		})
 		$(document).ajaxComplete(function(event, xhr, options){
 			searchForm.get(0).reset();
 		}).ajaxError(function(event, xhr, options, error){

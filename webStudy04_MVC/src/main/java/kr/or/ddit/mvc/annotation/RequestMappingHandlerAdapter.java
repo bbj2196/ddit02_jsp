@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -26,6 +27,9 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter{
 		argumentResolvers.add(new ServletSpecArgumentResolver());
 		argumentResolvers.add(new RequsetParamArgumentResolver());
 		argumentResolvers.add(new ModelAttributeArgumentResolver());
+	}
+	public void addArgumentResolvers(HandlerMethodArgumentResolver...resolvers) {
+		argumentResolvers.addAll(Arrays.asList(resolvers));
 	}
 	
 	private HandlerMethodArgumentResolver findArgumentResolver(Parameter parameter) {

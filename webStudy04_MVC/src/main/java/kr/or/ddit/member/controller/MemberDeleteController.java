@@ -12,22 +12,26 @@ import javax.servlet.http.HttpSession;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemberVO;
 
 /**
  * 로그인되어있는 사용자에 대한 탈퇴 처리.
  *
  */
-@WebServlet("/member/memberDelete.do")
-public class MemberDeleteController extends HttpServlet{
+@Controller
+public class MemberDeleteController {
 	private MemberService service = MemberServiceImpl.getInstance();
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+	@RequestMapping(value="/member/memberDelete.do",method=RequestMethod.POST)
+	public String doPost(@RequestParam("memPass") String memPass,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		MemberVO member = new MemberVO();
 		HttpSession session = req.getSession();
 		MemberVO savedMember = (MemberVO) session.getAttribute("authMember");
 		member.setMemId(savedMember.getMemId());
-		String memPass = req.getParameter("memPass");
 		member.setMemPass(memPass);
 		
 		String message = null;
@@ -53,13 +57,6 @@ public class MemberDeleteController extends HttpServlet{
 			break;
 		}
 		
-		if(viewName.startsWith("redirect:")) {
-			viewName = viewName.substring("redirect:".length());
-			resp.sendRedirect(req.getContextPath()+viewName);
-		}else {
-			String prefix = "/WEB-INF/views/";
-			String suffix = ".jsp";
-			req.getRequestDispatcher(prefix+viewName+suffix).forward(req, resp);
-		}
+return viewName;
 	}
 }

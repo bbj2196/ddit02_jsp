@@ -20,6 +20,11 @@ import kr.or.ddit.commons.exception.DataNotFoundException;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
@@ -29,51 +34,46 @@ import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;
 
-@WebServlet("/prod/prodUpdate.do")
-@MultipartConfig
-public class ProdUpdateControllerServlet extends HttpServlet{
+@Controller
+public class ProdUpdateControllerServlet {
 
 	ProdService service = new ProdServiceImpl();
 	OthersDAO otherDao = new OthersDAOImpl();
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@RequestMapping("/prod/prodUpdate.do")
+	public String doGet(@RequestParam("what") String prodId,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정화면으로이동
 		
-		String dest="/WEB-INF/views/prod/prodForm.jsp";
-		String prodId = req.getParameter("what");
+		String dest="prod/prodForm";
 		
 		ProdVO prod=null;
 		try {
 		prod = service.retrieveProd(prodId);
 		}catch(DataNotFoundException e) {
 			resp.sendError(400,"잘못된 상품 코드");
-			return;
+			return null;
 		}
 		List<BuyerVO> buyerList = otherDao.selectBuyerList();
 		List<Map<String, Object>> lprodList = otherDao.selectLprodList();
 		req.setAttribute("buyerList", buyerList);
 		req.setAttribute("lprodList", lprodList);
 		req.setAttribute("prod", prod);
-		req.getRequestDispatcher(dest).forward(req, resp);
+		return dest;
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@RequestMapping(value="/prod/prodUpdate.do",method=RequestMethod.POST)
+	public String doPost(@RequsetPart(value="prodImage",required=false)MultipartFile prodImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정하기
 		String message = null;
 		String viewName="prod/prodForm";
 		ProdVO prod = new ProdVO();
-		if(req instanceof StandardMultipartHttpServletRequest) {
-			MultipartFile prodImage = ((StandardMultipartHttpServletRequest)req).getFile("prodImage");
-			prod.setProdImage(prodImage);
-		}
+		prod.setProdImage(prodImage);
 		Map<String, String[]> params = req.getParameterMap();
 		try {
 			BeanUtils.populate(prod, params);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 			resp.sendError(500,"VO 변환불가");
-			return;
+			return null;
 		}
 		Map<String, List<String>> errors = new HashMap<>();
 		ValidatorUtils<ProdVO> validator = new ValidatorUtils<ProdVO>();
@@ -87,7 +87,7 @@ public class ProdUpdateControllerServlet extends HttpServlet{
 			result = service.modifyProd(prod);
 			}catch(DataNotFoundException e) {
 				resp.sendError(400,"해당 상품은 없습니다");
-				return;
+				return null;
 			}
 			
 			switch (result) {
@@ -107,14 +107,7 @@ public class ProdUpdateControllerServlet extends HttpServlet{
 			req.setAttribute("message", message);
 		}
 		
-		if(viewName.startsWith("redirect:")) {
-			viewName = viewName.substring("redirect:".length());
-			resp.sendRedirect(req.getContextPath()+viewName);
-		}else {
-			String prefix = "/WEB-INF/views/";
-			String suffix = ".jsp";
-			req.getRequestDispatcher(prefix+viewName+suffix).forward(req, resp);
-		}
+		return viewName;
 		
 	}
 }

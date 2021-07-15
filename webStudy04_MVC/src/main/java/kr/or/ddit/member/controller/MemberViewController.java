@@ -13,6 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.exception.UserNotFoundExecption;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemberVO;
 
 /**
@@ -20,12 +24,13 @@ import kr.or.ddit.vo.MemberVO;
  * @author PC-13
  *
  */
+@Controller
 public class MemberViewController{
 
 	MemberService serivce = MemberServiceImpl.getInstance();
 	
-	public String view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String who=req.getParameter("who");
+	@RequestMapping(value="/member/memberView.do")
+	public String view(@RequestParam("who") String who,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 1. who 받기
 		// 2. 검증
 		if(StringUtils.isBlank(who)) {

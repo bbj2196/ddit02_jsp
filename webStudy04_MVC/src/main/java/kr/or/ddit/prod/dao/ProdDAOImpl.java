@@ -55,7 +55,7 @@ public class ProdDAOImpl implements ProdDAO {
 	@Override
 	public int updateProd(ProdVO prod, SqlSession sqlSession) {
 			ProdDAO mapper = sqlSession.getMapper(ProdDAO.class);
-			return sqlSession.update("kr.or.ddit.prod.dao.ProdDAOImpl.updateProd",prod);
+			return sqlSession.update("kr.or.ddit.prod.dao.ProdDAO.updateProd",prod);
 		}
 	}
 

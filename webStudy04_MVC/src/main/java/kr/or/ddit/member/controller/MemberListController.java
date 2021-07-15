@@ -16,14 +16,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.SearchVO;
-
+@Controller
 public class MemberListController {
 
 	private MemberService service = MemberServiceImpl.getInstance();
-  
+
+	@RequestMapping("/member/memberList.do")
 	public String list(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		request.setCharacterEncoding("utf-8");
 		

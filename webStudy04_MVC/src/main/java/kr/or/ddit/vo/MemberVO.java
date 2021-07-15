@@ -141,6 +141,9 @@ public class MemberVO implements Serializable,HttpSessionBindingListener{
 			return null;
 		}
 		File origin = new File(memImg);
+		if(!origin.exists()) {
+			return null;
+		}
 		try(
 				FileInputStream fis = new FileInputStream(origin);
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
