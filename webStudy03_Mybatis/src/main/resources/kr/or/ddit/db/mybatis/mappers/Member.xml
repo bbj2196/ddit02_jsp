@@ -41,7 +41,7 @@
 		select
 		mem_id,mem_pass,mem_name,mem_regno1,mem_regno2,mem_bir,
 		mem_zip,mem_add1,mem_add2,mem_hometel,mem_comtel,mem_hp,mem_mail,
-		mem_job,mem_like,mem_memorial,mem_memorialday,mem_mileage,mem_delete.mem_role
+		mem_job,mem_like,mem_memorial,mem_memorialday,mem_mileage,mem_delete,mem_role
 		from member
 		<include refid="searchFrag"></include>
 		order by rowid desc

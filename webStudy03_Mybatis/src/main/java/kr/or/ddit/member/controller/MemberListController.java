@@ -1,6 +1,7 @@
 package kr.or.ddit.member.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -19,22 +20,11 @@ import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.SearchVO;
 
-/**
- * Servlet implementation class MemberListControllerServlet
- */
-@WebServlet("/member/memberList.do")
-public class MemberListControllerServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class MemberListController {
 
-	private MemberService service ;
-	
-	@Override
-		public void init(ServletConfig config) throws ServletException {
-			super.init(config);
-			service = MemberServiceImpl.getInstance();
-		}
+	private MemberService service = MemberServiceImpl.getInstance();
   
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String list(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		request.setCharacterEncoding("utf-8");
 		
 		String page = request.getParameter("page");
@@ -58,15 +48,8 @@ public class MemberListControllerServlet extends HttpServlet {
 		paging.setTotalRecord(totalrecord);
 		request.setAttribute("pagingVO", paging);
 		
-		String dest = "/WEB-INF/views/member/memberList.jsp";
-		request.getRequestDispatcher(dest).forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		return "member/memberList";
+		
 	}
 
 }
