@@ -16,7 +16,7 @@ import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
-import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.utils.ValidatorUtils;
@@ -33,7 +33,7 @@ public class MemberCreateControllerServlet {
 	}
 	
 	@RequestMapping(value="/member/create.do",method=RequestMethod.POST)
-	public String doPost(@ModelAttribute("member")MemberVO member,@RequsetPart("memImage") MultipartFile memImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String doPost(@ModelAttribute("member")MemberVO member,@RequestPart("memImage") MultipartFile memImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setAttribute("member", member);
 		member.setMemImage(memImage);
 		Map<String, List<String>>errors = new HashMap<>();

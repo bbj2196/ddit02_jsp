@@ -22,7 +22,7 @@ import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
-import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.prod.dao.OthersDAO;
@@ -61,7 +61,7 @@ public class ProdUpdateControllerServlet {
 	}
 	
 	@RequestMapping(value="/prod/prodUpdate.do",method=RequestMethod.POST)
-	public String doPost(@RequsetPart(value="prodImage",required=false)MultipartFile prodImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String doPost(@RequestPart(value="prodImage",required=false)MultipartFile prodImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정하기
 		String message = null;
 		String viewName="prod/prodForm";

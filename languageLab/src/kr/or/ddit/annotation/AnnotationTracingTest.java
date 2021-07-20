@@ -1,10 +1,12 @@
 package kr.or.ddit.annotation;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,6 +18,17 @@ import kr.or.ddit.utils.ReflectionUtils;
 public class AnnotationTracingTest {
 
 	public static void main(String[] args) {
+		
+////		Integer.max(a, b);
+//
+//		boolean[] a = new boolean[sss];
+//		for (boolean b : a) {
+//			System.out.println(b);
+//		}
+//		Arrays.sort
+//		if(true) {
+//			return;
+//		}
 		
 		Map<Class<?>, Component> clzMap = ReflectionUtils.getClassesWithAnnotationAtBasePackages(Component.class, "kr.or.ddit.annotation.base");
 		Map<String,Object>pojoContainer = new LinkedHashMap<>();

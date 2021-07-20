@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *  	3) Part로부터 확보한 입력스트립과 1차 출력 스트림으로 스트림 복사
  * 
  */
-//@WebServlet("/fileUpload.do")
-//@MultipartConfig
+@WebServlet("/fileUpload.do")
+@MultipartConfig
 public class FileUploadServlet extends HttpServlet{
 
 	@Override
@@ -40,6 +40,7 @@ public class FileUploadServlet extends HttpServlet{
 		System.out.println(textParam);
 		req.getSession().setAttribute("textParam", textParam);
 		Part filePart = req.getPart("filePart");
+//		req.getParts()// 여러개의 경우 배열형태로 받아온다
 //		System.out.println(filePart.toString());
 		
 		System.out.println(req.getParts().size());
@@ -52,11 +53,13 @@ public class FileUploadServlet extends HttpServlet{
 		if(!empty) {
 			if(StringUtils.startsWith(filePart.getContentType(), "image/")) {
 //				Content-Disposition: form-data; name="filePart"; filename=""
+//				이미지 파일의경우 위와같이 Disposition이 결정된다
 				String disposition = filePart.getHeader("Content-Disposition");
 				String originalFileName = extractFileName(disposition);
 				String saveName = UUID.randomUUID().toString();
 				File saveFile = new File(saveFolder,saveName);
 				try(
+						// 해당 part의 inputStream으로 part 파일을 얻어온다
 				InputStream is = filePart.getInputStream();
 						){
 					FileUtils.copyInputStreamToFile(is, saveFile);

@@ -16,7 +16,10 @@ import javax.servlet.http.Part;
 
 public class StandardMultipartHttpServletRequest extends HttpServletRequestWrapper{
 
-	private Map<String, List<MultipartFile>>multipartFiles;
+	// 일반리퀘스트와 다른점
+	// 업로드 파일들을 보관하고있는 Map이 있따.
+	// 보관된 파일들을 처리할수있는 메서드들이 몇개 있따
+	private Map<String, List<MultipartFile>>multipartFiles;// 파일들을 저장할 맵   [이름: 파일들]
 	public StandardMultipartHttpServletRequest(HttpServletRequest request) throws IOException, ServletException {
 		super(request);
 		multipartFiles= new HashMap<>();
@@ -26,6 +29,8 @@ public class StandardMultipartHttpServletRequest extends HttpServletRequestWrapp
 	
 	private void parseRequeset(HttpServletRequest request) throws IOException, ServletException {
 		Collection<Part> parts = request.getParts();
+		// part를 하나씩꺼내서 이름:파일들 의 형태로 넣음
+		// 이름으로 구분하고 여러개의 파일이 올수도 있기 때문에 List에 담아 Map에 최종적으로 담아준다
 		for (Part single : parts) {
 			if(single.getContentType() == null) {
 				continue;

@@ -1,5 +1,7 @@
 package kr.or.ddit.vo;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -38,4 +40,11 @@ public class AttatchVO implements Serializable{
 	private long attFilesize;
 	private String attFancysize;
 	private int attDownCnt;
+	
+	public void saveToBinary(File saveFolder) throws IOException {
+		if(attFile == null || attFile.isEmpty()) {
+			return;
+		}
+		attFile.transferTo(new File(saveFolder,attSavename));
+	}
 }

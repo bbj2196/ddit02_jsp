@@ -26,7 +26,9 @@ public class MultipartFilter implements Filter{
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String contentType = req.getContentType();
+		// rquest가 파일을 포함하고 있다면
 		if(contentType != null && contentType.startsWith("multipart/form-data")) {
+			// warpper 클래스를 request로 넘겨준다
 			request = new StandardMultipartHttpServletRequest(req);
 		}
 		chain.doFilter(request, response);

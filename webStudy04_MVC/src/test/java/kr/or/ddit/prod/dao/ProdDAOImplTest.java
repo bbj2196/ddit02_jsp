@@ -38,7 +38,6 @@ public class ProdDAOImplTest {
 								.prodUnit("Unit")
 						.build();
 		
-		assertEquals(1,dao.insertProd(prod, sqlSession));
 	}
 	
 	

@@ -15,8 +15,7 @@ import kr.or.ddit.vo.MemberVO;
 
 /**
  * server side application 에서의 이벤트 처리
- * @author PC-13
- *
+ * 
  * 1. 이벤트 타겟 결정
  * 2. 이벤트 종류결정
  *  	request, session, application

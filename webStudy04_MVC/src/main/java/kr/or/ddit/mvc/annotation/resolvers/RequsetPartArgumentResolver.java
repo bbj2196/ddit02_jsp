@@ -22,7 +22,7 @@ public class RequsetPartArgumentResolver implements HandlerMethodArgumentResolve
 	@Override
 	public boolean isSupported(Parameter parameter) {
 		Class<?> parameterType = parameter.getType();
-		RequsetPart annotation = parameter.getAnnotation(RequsetPart.class);
+		RequestPart annotation = parameter.getAnnotation(RequestPart.class);
 		return annotation != null && (
 				MultipartFile.class.equals(parameterType)
 				|| (parameterType.isArray() && parameterType.getComponentType().equals(MultipartFile.class))
@@ -37,7 +37,7 @@ public class RequsetPartArgumentResolver implements HandlerMethodArgumentResolve
 		}
 		
 		Class<?> parameterType = parameter.getType();
-		RequsetPart annotation = parameter.getAnnotation(RequsetPart.class);
+		RequestPart annotation = parameter.getAnnotation(RequestPart.class);
 		String partName = annotation.value();
 		boolean required = annotation.required();
 		

@@ -1,170 +1,136 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<jsp:include page="/includee/preScript.jsp"></jsp:include>
+<jsp:include page="/includee/preScript.jsp" />
+<script type="text/javascript" src="${cPath }/resources/js/jquery.form.min.js"></script>
 </head>
+<c:if test="${not empty message }">
+<script type="text/javascript">
+alert("${message }");
+</script>
+<c:remove var="message" scope="session"/>
+</c:if>
 <body>
-
-	<table border="1" class="table table-hover">
-		<tbody>
-			<tr>
-				<th>작성일</th>
-				<td>${freeboard.boDate}</td>
-			</tr>
-			<tr>
-				<th>신고수</th>
-				<td>${freeboard.boRep}
-				<input type="button" id="rep" value="신고하기">
-				</td>
-			</tr>
-			<tr>
-				<th>조회수</th>
-				<td>${freeboard.boHit}</td>
-			</tr>
-			<tr>
-				<th>추천수</th>
-				<td>${freeboard.boRec}
-				<input type="button"id="rec" value="추천하기">
-				</td>
-			</tr>
-			<tr>
-				<th>부모글번호</th>
-				<td>${freeboard.boParent}</td>
-			</tr>
-			<tr>
-				<th>게시글 번호</th>
-				<td>${freeboard.boNo}</td>
-			</tr>
-			<tr>
-				<th>게시글제목</th>
-				<td>${freeboard.boTitle}</td>
-			</tr>
-			<tr>
-				<th>작성자</th>
-				<td>${freeboard.boWriter}</td>
-			</tr>
-			<tr>
-				<th>IP주소</th>
-				<td>${freeboard.boIp}</td>
-			</tr>
-			<tr>
-				<th>이메일</th>
-				<td>${freeboard.boEmail}</td>
-			</tr>
-<!-- 			<tr> -->
-<!-- 				<th>비밀번호</th> -->
-<%-- 				<td>${freeboard.boPass}</td> --%>
-<!-- 			</tr> -->
-			<tr>
-				<th>내용</th>
-				<td>${freeboard.boContent}</td>
-			</tr>
-			<tr>
-			<th>첨부파일목록</th>
+	<table class="table table-bordered">
+		<tr>
+			<th>글번호</th>
+			<td>${board.boNo }</td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td>${board.boTitle }</td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td>${board.boWriter }</td>
+		</tr>
+		<tr>
+			<th>아이피</th>
+			<td>${board.boIp }</td>
+		</tr>
+		<tr>
+			<th>이메일</th>
+			<td>${board.boEmail }</td>
+		</tr>
+		<tr>
+			<th>작성일</th>
+			<td>${board.boDate }</td>
+		</tr>
+		<tr>
+			<th>조회수</th>
+			<td>${board.boHit }</td>
+		</tr>
+		<tr>
+			<th>신고수</th>
+			<td><span id="REPORT">${board.boRep }</span> <span class="incrementBtn" data-type="REPORT">신고!</span></td>
+		</tr>
+		<tr>
+			<th>추천수</th>
+			<td><span id="RECOMMEND">${board.boRec }</span> <span class="incrementBtn" data-type="RECOMMEND">추천!</span></td>
+		</tr>
+		<tr>
+			<th>부모글</th>
+			<td>${board.boParent }</td>
+		</tr>
+		<tr>
+			<th>첨부파일</th>
 			<td>
-			<c:if test="${not empty freeboard.attatchList }">
-			<table border="1">
-			<thead>
+				<c:forEach items="${board.attatchList }" var="attatch" varStatus="vs">
+				<c:url value="/board/download.do" var="downURL">
+				<c:param name="what" value="${attatch.attNo }"></c:param>
+				</c:url>
+					<a href="${downURL }">${attatch.attFilename }</a> ${not vs.last ? ",":"" }
+				</c:forEach>
+			</td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td>${board.boContent }</td>
+		</tr>
+		
 			<tr>
-			<th>파일번호</th>
-			<th>게시글번호</th>
-			<th>파일명</th>
-			<th>크기요약</th>
-			<th>다운로드수</th>
-			</tr>
-			</thead>
-			<tbody>
-			
-			<c:forEach items="${freeboard.attatchList }" var="attatch">
-								<tr>
-									<td>${attatch.attNo}</td>
-									<td>${attatch.boNo}</td>
-									<td>${attatch.attFilename}</td>
-									<td>${attatch.attFancysize}</td>
-									<td>${attatch.attDownCnt}</td>
-								</tr>
-							</c:forEach>
-			
-			</tbody>
-			</table>
-			</c:if>
+			<td colspan="2">
+			<c:url value="/board/boardInsert.do" var="insertURL">
+			<c:param name="boParent" value="${board.boNo }"></c:param>
+			</c:url>
+			<c:url value="/board/boardUpdate.do" var="updateURL">
+			<c:param name="boNo" value="${board.boNo }"></c:param>
+			</c:url>
+			<%-- <c:url value="/board/boardDelete.do" var="deleteURL">
+			<c:param name="boNo" value="${board.boNo }"></c:param>
+			</c:url> --%>
+			<input type="button" value="답글쓰기" class="controlBtn" data-gopage="${insertURL }">
+			<input type="button" value="수정하기" class="controlBtn" data-gopage="${updateURL }">
+			<input id="delBtn" type="button" value="삭제하기">
 			</td>
 			</tr>
-			<tr>
-			<th>댓글 기록</th>
-			<td>
-			<c:if test="${not empty freeboard.replyList }">
-			<table border="1">
-			<thead>
-								<tr>
-									<th>댓글번호</th>
-									<th>게시글번호</th>
-									<th>작성자</th>
-									<th>댓글내용</th>
-									<th>이메일</th>
-									<th>날짜</th>
-									<th>부모글번호</th>
-								</tr>
-							</thead>
-			<tbody>
-			<c:forEach items="${freeboard.replyList }" var="freereply">
-									<tr>
-										<td>${freereply.repNo}</td>
-										<td>${freereply.boNo}</td>
-										<td>${freereply.repWriter}</td>
-										<td>${freereply.repContent}</td>
-										<td>${freereply.repMail}</td>
-										<td>${freereply.repDate}</td>
-										<td>${freereply.repParent}</td>
-									</tr>
-								</c:forEach>
-			</tbody>
-			</table>
-			</c:if>
-			</td>
-			</tr>
-		</tbody>
 	</table>
-	<form id="hiddenForm" action="">
-	<input type="hidden" name="type">
-	<input type="hidden" name="what" value="${freeboard.boNo }">
+	<form id="incrementForm" method="post" action="${cPath }/board/boardView.do" style="border: 5px solid red;">
+		<h4>Hidden Form</h4>
+		<input type="text" name="what" value="${board.boNo }" /> 
+		<input type="text" name="countType" value="" /> 
+	</form>
+	<form id="delForm" action="${cPath }/board/boardDelete.do" method="post">
+		<input type="text" name="boNo" value="${board.boNo }" required="required" /> 
+		<input type="text" name="boPass" required="required" >
 	</form>
 	<script type="text/javascript">
-	$(function(){
-		let hidden = $("#hiddenForm");
-		hidden.on("submit",function(eve){
-			eve.preventDefault();
-			
-			$.ajax({
-				url : "${pageContext.request.contextPath }",
-				data : hidden.serialize(),
-				method : "post",
-				dataType : "text",
-				success : function(res) {
-					console.log(res);
-				},
-				error : function(xhr) {
-					alert(xhr.status)
+		let incrementForm = $("#incrementForm").ajaxForm({
+			dataType:"json",
+			success:function(resp){
+				for(let prop in resp){
+					let value = resp[prop];
+					if(value!="OK") return;
+					let incArea = $("#"+prop);
+					let before = incArea.text();
+					incArea.text(parseInt(before)+1);
 				}
-			})
-			return false;
-		})
-		$("#rec").on("click",function(){
-			hidden.find("[name='type']").val("rec");
-			hidden.submit();
-		});
-		$("#rep").on("click",function(){
-			hidden.find("[name='type']").val("rep");
-			hidden.submit();
+			},
+			resetForm : true
 		});
 		
-	})
+		$(".incrementBtn").on("click", function(event){
+			let countType = $(this).data("type");
+			incrementForm.find("[name='countType']").val(countType);
+			incrementForm.submit();
+		}).css("cursor", "pointer");
+		
+		$("#delBtn").on("click",function(eve){
+			eve.preventDefault();
+			
+			let pass = prompt("비밀번호를 입력해주세요");
+			$("#delForm").find("[name='boPass']").val(pass);
+			$("#delForm").submit();
+			
+			return false;
+		})
+		
 	</script>
-	<jsp:include page="/includee/footer.jsp"></jsp:include>
+	<jsp:include page="/includee/footer.jsp" />
 </body>
 </html>

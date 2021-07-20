@@ -29,4 +29,17 @@ public enum BrowserType{
 		   }
 		   return finded.getBrowserName();
 	   }
+	   public static BrowserType findBrowserType(String userAgent) {
+		   BrowserType finded = OTHER;
+		   if(userAgent != null) {
+		   userAgent = userAgent.toUpperCase();
+		   for(BrowserType tmp : values()){
+				if(userAgent.indexOf(tmp.name())>=0){
+					finded = tmp;
+					break;
+				}
+			}
+		   }
+		   return finded;
+	   }
 }

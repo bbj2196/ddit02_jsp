@@ -1,5 +1,7 @@
 package kr.or.ddit.board.dao;
 
+import org.apache.ibatis.session.SqlSession;
+
 import kr.or.ddit.vo.AttatchVO;
 import kr.or.ddit.vo.FreeBoardVO;
 
@@ -31,9 +33,10 @@ public interface AttatchDAO {
 	/**
 	 * 해당 게시글번호의 모든 첨부파일을 지운다
 	 * @param boNo
+	 * @param sqlSession TODO
 	 * @return
 	 */
-	public int deleteAll(int boNo);
+	public int deleteAll(int boNo, SqlSession sqlSession);
 	/**
 	 * 다운로드수 증가
 	 * @param attNo

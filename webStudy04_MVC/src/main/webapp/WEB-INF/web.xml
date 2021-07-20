@@ -41,7 +41,7 @@
     <init-param>
     <param-name>basePackage</param-name>
     <param-value>kr.or.ddit</param-value>
-    </init-param>
+    </init-param>	
     <init-param>
     <param-name>prefix</param-name>
     <param-value>/WEB-INF/views/</param-value>

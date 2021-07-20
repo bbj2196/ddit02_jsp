@@ -21,7 +21,7 @@ import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
-import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.prod.dao.OthersDAO;
@@ -55,7 +55,7 @@ public class ProdInsertController{
 
 
 	@RequestMapping(value="/prod/prodInsert.do",method=RequestMethod.POST)
-	public String prodInsert(@ModelAttribute("prod")ProdVO prod,@RequsetPart("prodImage") MultipartFile prodImage,HttpServletRequest request){
+	public String prodInsert(@ModelAttribute("prod")ProdVO prod,@RequestPart("prodImage") MultipartFile prodImage,HttpServletRequest request){
 		String viewName=null;
 		
 		if(request instanceof StandardMultipartHttpServletRequest) {

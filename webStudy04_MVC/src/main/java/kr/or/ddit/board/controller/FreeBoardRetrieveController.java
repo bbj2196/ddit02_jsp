@@ -1,6 +1,7 @@
 package kr.or.ddit.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.groups.Default;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.board.service.FreeBoardService;
 import kr.or.ddit.board.service.FreeBoardService.CountType;
@@ -19,6 +22,7 @@ import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
 import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.utils.ValidatorUtils;
@@ -32,7 +36,7 @@ public class FreeBoardRetrieveController {
 
 	FreeBoardService boardService = new FreeBoardServiceImpl();
 	@RequestMapping("/board/boardList.do")
-	public String list(@RequestParam(value="currentPage",required=false,defaultValue="1")int currentPage,@ModelAttribute("search")ExtendsSearchVO search,HttpServletRequest req,HttpServletResponse resp) {
+	public String list(@RequestParam(value="page",required=false,defaultValue="1")int currentPage,@ModelAttribute("search")ExtendsSearchVO search,HttpServletRequest req,HttpServletResponse resp) {
 		//동기 방식 목록조회
 		// 검색조건 제목,작성자,
 		// 최근 작성글이 먼저 나오도록
@@ -56,7 +60,7 @@ public class FreeBoardRetrieveController {
 		try {
 		board = boardService.retriveBoard(boNo);
 		boardService.incrementCount(boNo,CountType.SEE);
-		req.setAttribute("freeboard", board);
+		req.setAttribute("board", board);
 		}catch(DataNotFoundException e) {
 			new RuntimeException(e);
 		}
@@ -65,68 +69,41 @@ public class FreeBoardRetrieveController {
 	}
 	
 	@RequestMapping(value="/board/boardView.do",method=RequestMethod.POST)
-	public String func(@RequestParam("type")String type,@RequestParam("what")int boNo,HttpServletRequest req,HttpServletResponse resp) {
-		
+	public String func(@RequestParam("countType")String type,@RequestParam("what")int boNo,HttpServletRequest req,HttpServletResponse resp) throws IOException {
 		FreeBoardVO board=null;
 		CountType conType=null;
-		switch (type) {
-		case "rec":
-			conType=CountType.RECOMMEND;
-			break;
-		case "rep":
-			conType=CountType.REPORT;
-			break;
-		}
 		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("application/json;charset=utf-8");
 		
-		try {
+		try (
+				PrintWriter out = resp.getWriter();
+				){
 		board = boardService.retriveBoard(boNo);
-		boardService.incrementCount(boNo,conType);
-		req.setAttribute("freeboard", board);
-		resp.getWriter().print("ok");
-		//TODO 비동기로 뿌리는거 어떻게?
-		}catch(DataNotFoundException | IOException e) {
-			new RuntimeException(e);
+		int cnt=-1;
+		switch (type) {
+		case "RECOMMEND":
+			conType=CountType.RECOMMEND;
+			cnt = board.getBoRec();
+			break;
+		case "REPORT":
+			conType=CountType.REPORT;
+			cnt=board.getBoRep();
+			break;
+		default:
+			resp.sendError(400);
+			return null;
+		}
+		ServiceResult result = boardService.incrementCount(boNo,conType);
+		Map<CountType, String>resultMap = new HashMap<>();
+		resultMap.put(conType, "OK");
+		req.setAttribute("board", board);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(out, resultMap);
+		}catch(DataNotFoundException e) {
+			resp.sendError(400);
 		}
 		return null;
 	}
 	
-	@RequestMapping("/board/boardInsert.do")
-	public String insertFrom(HttpServletRequest req,HttpServletResponse resp) {
-		
-		return "/board/boardForm";
-	}
 	
-	public String insertBoard(@ModelAttribute("board")FreeBoardVO board,@ModelAttribute("files")MultipartFile[] file,HttpServletRequest req,HttpServletResponse resp) {
-		Map<String, List<String>>errors = new HashMap<>();
-		ValidatorUtils<FreeBoardVO>valUtil = new ValidatorUtils<>();
-		boolean valid = valUtil.validate(board, errors,Default.class);
-		String viewName=null;
-		req.setAttribute("errors", errors);
-		req.setAttribute("board", board);
-		if(!valid) {
-			
-			return "/board/boardForm";
-		}
-			ServiceResult result = boardService.createBoard(board);
-			switch (result) {
-			case OK:
-				
-				viewName="redirect:/board/boardView.do?what="+board.getBoNo();
-				break;
-			case PKDUPLICATED:
-				req.setAttribute("message", "PK중복");
-				viewName="";
-				break;
-			default:
-				
-				break;
-			}
-			
-			
-
-			return viewName;
-		
-		
-	}
 }

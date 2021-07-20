@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(PARAMETER)
-public @interface RequsetPart {
+public @interface RequestPart {
 	String value();
 	boolean required() default true;
 }

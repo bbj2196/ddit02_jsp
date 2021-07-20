@@ -2,6 +2,7 @@ package kr.or.ddit.board.service;
 
 import java.util.List;
 
+import kr.or.ddit.commons.exception.DataNotFoundException;
 import kr.or.ddit.enumtype.ServiceResult;
 import kr.or.ddit.vo.AttatchVO;
 import kr.or.ddit.vo.FreeBoardVO;
@@ -31,7 +32,7 @@ public interface FreeBoardService {
 	/**
 	 * 게시물 번호로 하나의 게시물을 찾는 메서드
 	 * @param boNo 게시물 번호
-	 * @return 게시물번호로 조회된 {@link FreeBoardVO}
+	 * @return 게시물번호로 조회된 {@link FreeBoardVO}, 없을시 {@link DataNotFoundException}
 	 */
 	public FreeBoardVO retriveBoard(int boNo);
 	/**
@@ -58,7 +59,7 @@ public interface FreeBoardService {
 	 * 게시물의 추천수,신고수를 증가시키기 위한 메서드
 	 * @param boNo 해당 게시물의 번호
 	 * @param type RECOMMEND = 추천, REPORT = 신고
-	 * @return 성공,실패(게시글없음, 그런타입없음)
+	 * @return 성공,실패(게시글없음, 그런타입없음), 없을시 {@link DataNotFoundException}
 	 */
 	public ServiceResult incrementCount(int boNo,CountType type);
 }

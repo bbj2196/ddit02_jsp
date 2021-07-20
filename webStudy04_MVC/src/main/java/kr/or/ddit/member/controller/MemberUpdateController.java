@@ -25,7 +25,7 @@ import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
-import kr.or.ddit.mvc.annotation.resolvers.RequsetPart;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.utils.ValidatorUtils;
@@ -57,7 +57,7 @@ public class MemberUpdateController {
 	}
 
 	@RequestMapping(value="/member/update.do",method=RequestMethod.POST)
-	public String doPost(@ModelAttribute("member")MemberVO member,@RequsetPart("memImage") MultipartFile memImage,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String doPost(@ModelAttribute("member")MemberVO member,@RequestPart("memImage") MultipartFile memImage,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String, String[]> map = request.getParameterMap();
 		
 		request.setAttribute("member", member);

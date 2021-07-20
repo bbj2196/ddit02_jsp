@@ -32,7 +32,7 @@ public class PagingVO<T> {
 	
 	private SearchVO simpleSearch; //단순키워드검색
 	private T detailSearch; // 상세검색
-	private List<T>datalist;
+	private List<T>dataList;
 	
 	public void setDetailSearch(T detailSearch) {
 		this.detailSearch = detailSearch;
@@ -41,7 +41,7 @@ public class PagingVO<T> {
 		this.simpleSearch = simpleSearch;
 	}
 	public void setDatalist(List<T> datalist) {
-		this.datalist = datalist;
+		this.dataList = datalist;
 	}
 	public void setTotalRecord(int totalRecord) {
 		this.totalRecord = totalRecord;

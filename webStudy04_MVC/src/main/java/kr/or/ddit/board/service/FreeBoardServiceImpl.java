@@ -1,14 +1,28 @@
 package kr.or.ddit.board.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BooleanDeserializer;
 
 import kr.or.ddit.board.dao.AttatchDAO;
+import kr.or.ddit.board.dao.AttatchDAOImpl;
 import kr.or.ddit.board.dao.FreeBoardDAO;
 import kr.or.ddit.board.dao.FreeBoardDAOImpl;
 import kr.or.ddit.commons.exception.DataNotFoundException;
+import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.enumtype.ServiceResult;
+import kr.or.ddit.multipart.MultipartFile;
 import kr.or.ddit.utils.EncryptUtils;
 import kr.or.ddit.vo.AttatchVO;
 import kr.or.ddit.vo.FreeBoardVO;
@@ -17,25 +31,51 @@ import kr.or.ddit.vo.PagingVO;
 public class FreeBoardServiceImpl implements FreeBoardService {
 
 	private FreeBoardDAO boardDao = new FreeBoardDAOImpl();
-	private AttatchDAO attDao;
+	private AttatchDAO attDao = new AttatchDAOImpl();
+	private File saveDir=new File("d:/savedfile");
 	@Override
 	public ServiceResult createBoard(FreeBoardVO board) {
-		// TODO 파일 업로드 처리해야함
-		try {
-		FreeBoardVO saved = retriveBoard(board.getBoNo());
-		if(saved != null) {
-			return ServiceResult.PKDUPLICATED;
+		if(board == null) {
+			return ServiceResult.NOTEXIST;
 		}
-		}catch(DataNotFoundException e) {}
+		int fileCnt=0;
+		List<AttatchVO> attList = board.getAttatchList();
+		
+		if(attList != null && !attList.isEmpty()) {
+			fileCnt=saveFiles(board);
+			if(fileCnt<1) {
+				return ServiceResult.FILE_IO_ERROR;
+			}
+		}
 		String encoded=EncryptUtils.encryptSha512Base64(board.getBoPass());
 		board.setBoPass(encoded);
 		int cnt=boardDao.insertBoard(board);
 		if(cnt >0) {
+			if(fileCnt >0) {
+			int attCnt = attDao.insertAttatches(board);
+			if(attCnt < 1) {
+				return ServiceResult.FAIL;
+			}
+			}
 			return ServiceResult.OK;
 		}else {
 			return ServiceResult.FAIL;
 		}
 		
+	}
+	private int saveFiles(FreeBoardVO board) {
+		List<AttatchVO> fileList = board.getAttatchList();
+		if(!saveDir.exists()) saveDir.mkdir();
+		int idx=0;
+		for (AttatchVO file : fileList) {
+			try {
+				file.saveToBinary(saveDir);
+				idx++;
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return idx;
 	}
 
 	@Override
@@ -60,13 +100,29 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Override
 	public ServiceResult modifyBoard(FreeBoardVO board) {
-		// TODO 파일 업로드 처리
 		FreeBoardVO saved = boardDao.selectBoard(board.getBoNo());
 		String encoded = EncryptUtils.encryptSha512Base64(board.getBoPass());
 		String savedPass = saved.getBoPass();
+		
 		if(!savedPass.equals(encoded)) {
 			return ServiceResult.INVALIDPASSWORD;
 		}
+		// 새로 추가된거 저장
+		if(board.getAttatchList() != null && !board.getAttatchList().isEmpty()) {
+		saveFiles(board);
+		attDao.insertAttatches(board);
+		}
+		// 삭제
+		int[] arr = board.getDelAttNos();
+		if(arr != null) {
+		for (int i = 0; i < arr.length; i++) {
+			AttatchVO attatch = attDao.selectAttach(arr[i]);			
+			File file= new File(saveDir,attatch.getAttSavename());
+			file.delete();
+		}
+		attDao.deleteAttaches(board);
+		}
+		// 게시글 변경
 		int cnt=boardDao.updateBoard(board);
 		if(cnt>0) {
 			return ServiceResult.OK;
@@ -78,24 +134,55 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Override
 	public ServiceResult removeBoard(FreeBoardVO board) {
+		// 비밀번호확인 -> 맞다면 게시글삭제 -> 첨부파일이있다면 첨부파일테이블삭제, 첨부파일 삭제
+		
+		// 비밀번호 확인
 		FreeBoardVO saved = boardDao.selectBoard(board.getBoNo());
 		String encoded = EncryptUtils.encryptSha512Base64(board.getBoPass());
 		String savedPass = saved.getBoPass();
+		boolean flag = true;
 		if(!savedPass.equals(encoded)) {
 			return ServiceResult.INVALIDPASSWORD;
 		}
-		int cnt=boardDao.deleteBoard(board.getBoNo());
-		if(cnt>0) {
-			return ServiceResult.OK;
-		}else {
-			return ServiceResult.FAIL;
+		try(
+				SqlSession sqlSession = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();
+				){
+			// 첨부파일여부 확인
+			List<AttatchVO> attList = saved.getAttatchList();
+			if (attList != null && !attList.isEmpty()) {
+				// attatch 삭제
+				int attCnt = attDao.deleteAll(saved.getBoNo(), sqlSession);
+				if (attCnt > 0) {
+					// 파일삭제
+					int delCnt = 0;
+					for (AttatchVO vo : attList) {
+						new File("d:/savedfile/" + vo.getAttSavename()).delete();
+						delCnt++;
+					}
+					flag = delCnt == attCnt;
+				}
+			}
+			sqlSession.commit();
+		}// end try
+		if (flag) {
+			// 게시글 삭제
+			int cnt = boardDao.deleteBoard(board.getBoNo());
+			if (cnt > 0)
+				return ServiceResult.OK;
 		}
+		return ServiceResult.FAIL;
+
+		
 	}
 
 	@Override
 	public AttatchVO download(int attNo) {
-		// TODO Auto-generated method stub
-		return null;
+		AttatchVO vo = attDao.selectAttach(attNo);
+		if(vo == null) {
+			throw new DataNotFoundException(attNo+"");
+		}
+		attDao.increamentDownCount(attNo);
+		return vo;
 	}
 
 	@Override
@@ -121,6 +208,15 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		}
 
 		return result;
+	}
+	
+	private void deleteBinaryFile(String...saveNames) {
+		if(saveNames == null || saveNames.length <=0) {
+			return;
+		}
+		for(String saveName:saveNames) {
+			FileUtils.deleteQuietly(new File(saveDir,saveName));
+		}
 	}
 
 }
