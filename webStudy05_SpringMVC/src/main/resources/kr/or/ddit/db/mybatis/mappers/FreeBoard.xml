@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.board.dao.FreeBoardDAO">
+
+
+	<sql id="search">
+		<if test="simpleSearch != null">
+			<trim prefix="WHERE" prefixOverrides="AND">
+				<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleSearch.startDate)">
+					BO_DATE >= TO_DATE(#{simpleSearch.startDate},'YYYY-MM-DD')
+				</if>
+				<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleSearch.endDate)">
+					<![CDATA[
+					AND BO_DATE <= TO_DATE(#{simpleSearch.endDate},'YYYY-MM-DD')
+					]]>
+				</if>
+				<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleSearch.searchWord)">
+					AND
+					<choose>
+						<when test="simpleSearch.searchType eq 'title'">instr(bo_title,#{simpleSearch.searchWord})>0</when>
+						<when test="simpleSearch.searchType eq 'writer'">instr(bo_writer,#{simpleSearch.searchWord})>0</when>
+						<otherwise>
+							(
+							instr(bo_title,#{simpleSearch.searchWord})>0
+							or instr(bo_writer,#{simpleSearch.searchWord})>0
+							)
+						</otherwise>
+					</choose>
+				</if>
+			</trim>
+		</if>
+	</sql>
+
+	<resultMap type="FreeBoardVO" id="FreeBoardMap"	autoMapping="true">
+		<id column="BO_NO" property="boNo" />
+		<result column="bodate" property="boDate"/>
+		<collection property="replyList" ofType="kr.or.ddit.vo.FreeReplyVO" autoMapping="true">
+			<id column="rep_no" property="repNo" />
+				<result column="replyBo" property="boNo"/>
+		</collection>
+		<collection property="attatchList"	ofType="kr.or.ddit.vo.AttatchVO" autoMapping="true">
+			<id column="att_no" property="attNo" />
+				<result column="attBO" property="boNo"/>
+			
+		</collection>
+	</resultMap>
+
+	
+
+	<update id="updateBoard" parameterType="FreeBoardVO">
+	UPDATE freeboard
+	    SET 
+	        bo_title   =  #{boTitle,jdbcType=VARCHAR}
+			,bo_writer  =  #{boWriter,jdbcType=VARCHAR}
+			,bo_ip      =  #{boIp,jdbcType=VARCHAR} 
+			,bo_email   =  #{boEmail,jdbcType=VARCHAR}
+			,bo_pass    =  #{boPass,jdbcType=VARCHAR}
+			,bo_content =  #{boContent,jdbcType=CLOB}
+			,bo_date    =  TO_DATE(#{boDate,jdbcType=DATE},'YYYY-MM-DD')
+			,bo_parent  =  #{boParent,jdbcType=INTEGER}
+	WHERE
+	    bo_no =#{boNo,jdbcType=INTEGER}
+	</update>
+
+	<insert id="insertBoard" parameterType="FreeBoardVO">
+	<selectKey resultType="int" keyProperty="boNo" order="BEFORE">
+	select freeboard_seq.nextval from dual
+	</selectKey>
+	INSERT INTO freeboard (
+	    bo_no,    bo_title,    bo_writer,
+	    bo_ip,    bo_email,    bo_pass,
+	    bo_content,    bo_parent
+	) VALUES (
+	    #{boNo,jdbcType=INTEGER},    #{boTitle,jdbcType=VARCHAR},    #{boWriter,jdbcType=VARCHAR},
+	    #{boIp,jdbcType=VARCHAR},    #{boEmail,jdbcType=VARCHAR},    #{boPass,jdbcType=VARCHAR},
+	    #{boContent,jdbcType=CLOB},	    #{boParent,jdbcType=INTEGER}
+	)
+	</insert>	
+
+	<select id="selectBoard" parameterType="int" resultMap="FreeBoardMap">
+		select
+			 c.BO_NO as attBo,b.BO_NO as replyBo,
+			 to_char(a.bo_date,'YYYY-MM-DD') as bodate,
+			 a.*,b.*,c.*
+		from
+			 freeboard a left outer join freereply b on(a.bo_no = b.bo_no)
+                			left outer join attatch c on (a.bo_no = c.bo_no)
+        where
+        	a.bo_no=#{boNo}
+		order by
+			 a.bo_no desc
+	</select>
+
+	<select id="selectBoardList" parameterType="PagingVO" resultType="FreeBoardVO">
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+		    	<![CDATA[
+		        SELECT BO_NO, 
+		        	LPAD('   re:', 6*4*(LEVEL-1), '&nbsp;')||BO_TITLE BO_TITLE, 
+		        		BO_WRITER, BO_HIT, BO_REC, BO_REP,
+		                TO_CHAR(BO_DATE, 'YYYY-MM-DD HH:MI') BO_DATE
+		                , (
+		                	SELECT COUNT(*) 
+		                	FROM ATTATCH 
+		                	WHERE FREEBOARD.BO_NO = ATTATCH.BO_NO
+		                ) ATT_COUNT       
+		        FROM FREEBOARD
+		        ]]>
+				<include refid="search" />
+				START WITH BO_PARENT IS NULL
+				CONNECT BY PRIOR BO_NO = BO_PARENT
+				
+				<if test="simpleSearch!=null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleSearch.sortType)">
+					ORDER SIBLINGS BY ${simpleSearch.sortType} DESC
+				</if>
+				<if test="simpleSearch!=null and @org.apache.commons.lang3.StringUtils@isBlank(simpleSearch.sortType)">
+					ORDER SIBLINGS BY BO_NO DESC
+				</if>
+				
+			) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	
+	</select>
+
+	<select id="selectTotalRecord" parameterType="PagingVO" resultType="int">
+	select count(*)
+	from freeboard
+	<include refid="search"></include>
+	order by bo_date 
+	</select>
+	
+	<update id="incrementHit" parameterType="int">
+	update freeboard set bo_hit = nvl(bo_hit,0)+1 where bo_no = #{boNO}
+	</update>
+	<update id="incrementRec" parameterType="int">
+	update freeboard set bo_rec = nvl(bo_rec,0)+1 where bo_no = #{boNO}
+	</update>
+	<update id="incrementRep" parameterType="int">
+	update freeboard set bo_rep = nvl(bo_rep,0)+1 where bo_no = #{boNO}
+	</update>
+
+
+	<delete id="deleteBoard" parameterType="int">
+	merge into freeboard c
+	using (
+	        select b.BO_NO,(select count(*) 
+	        				from freeboard a 
+	        				where a.bo_parent = b.bo_no) cnt
+	        from freeboard b
+	        ) d
+	on(d.bo_no = #{boNo} and c.bo_no = d.bo_no)
+	when matched then update set  bo_title ='[삭제됨]'||bo_title 
+									bo_writer = '[삭제됨]'
+									delete where d.cnt=0
+	
+	</delete>
+
+</mapper>
