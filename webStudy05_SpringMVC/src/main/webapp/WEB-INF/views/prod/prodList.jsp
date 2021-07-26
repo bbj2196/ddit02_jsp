@@ -113,7 +113,7 @@
 			success:function(pagingVO){
 				tbody.empty();
 				pagingArea.empty();
-				let prodList = pagingVO.datalist;
+				let prodList = pagingVO.dataList;
 				let trTags = [];
 				if(prodList){
 					$(prodList).each(function(idx, prod){

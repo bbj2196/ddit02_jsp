@@ -1,34 +1,21 @@
 package kr.or.ddit.prod.controller;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
+
 
 import kr.or.ddit.enumtype.ServiceResult;
-import kr.or.ddit.multipart.MultipartFile;
-import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
-import kr.or.ddit.mvc.annotation.RequestMethod;
-import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
-import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
-import kr.or.ddit.mvc.annotation.stereotype.Controller;
-import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
-import kr.or.ddit.utils.ValidatorUtils;
 import kr.or.ddit.validate.groups.InsertGroup;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;
@@ -36,36 +23,37 @@ import kr.or.ddit.vo.ProdVO;
 @Controller
 public class ProdInsertController{
 
-	OthersDAO other = new OthersDAOImpl();
-	ProdService service = new ProdServiceImpl();
+	@Inject
+	OthersDAO other;
 	
-	private void addAttribute(HttpServletRequest request) {
+	@Inject
+	ProdService service;
+	
+	private void addAttribute(Model model) {
 		List<BuyerVO> buyerList = other.selectBuyerList();
 		List<Map<String, Object>> lrpdoList = other.selectLprodList();
 		
-		request.setAttribute("buyerList", buyerList);
-		request.setAttribute("lprodList", lrpdoList);
+		model.addAttribute("buyerList", buyerList);
+		model.addAttribute("lprodList", lrpdoList);
 	}
 	
 	@RequestMapping("/prod/prodInsert.do")
-	public String form(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		addAttribute(request);
+	public String form(Model model, HttpServletResponse response) throws ServletException, IOException {
+		addAttribute(model);
 		return"prod/prodForm";
 	}
 
 
 	@RequestMapping(value="/prod/prodInsert.do",method=RequestMethod.POST)
-	public String prodInsert(@ModelAttribute("prod")ProdVO prod,@RequestPart("prodImage") MultipartFile prodImage,HttpServletRequest request){
+	public String prodInsert(
+			@Validated(InsertGroup.class) @ModelAttribute("prod")ProdVO prod,
+			Errors errors,
+			@RequestPart("prodImage") MultipartFile prodImage,
+			Model model
+			){
 		String viewName=null;
 		
-		if(request instanceof StandardMultipartHttpServletRequest) {
-			prod.setProdImage(prodImage);
-		}
-		
-		Map<String, List<String>> errors = new HashMap<>();
-		ValidatorUtils<ProdVO> validator = new ValidatorUtils<ProdVO>();
-		boolean valid = validator.validate(prod, errors , InsertGroup.class);
-		if(valid) {
+		if(!errors.hasErrors()) {
 		ServiceResult result = service.createProd(prod);
 		String message = null;
 		switch (result) {
@@ -82,10 +70,10 @@ public class ProdInsertController{
 			message="서버 에러 다시시도";
 			break;
 		}
-		request.setAttribute("message", message);
+		model.addAttribute("message", message);
 		}else {
 			viewName="prod/prodForm";
-			request.setAttribute("errors", errors);
+			model.addAttribute("errors", errors);
 		}
 		
 		return viewName;

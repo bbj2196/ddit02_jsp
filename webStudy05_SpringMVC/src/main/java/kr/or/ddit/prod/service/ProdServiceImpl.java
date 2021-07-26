@@ -5,25 +5,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
-import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.enumtype.ServiceResult;
-import kr.or.ddit.listener.ContestLoaderListener;
-import kr.or.ddit.multipart.MultipartFile;
-import kr.or.ddit.prod.dao.OthersDAO;
-import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.dao.ProdDAO;
-import kr.or.ddit.prod.dao.ProdDAOImpl;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
+@Service
 public class ProdServiceImpl implements ProdService {
 
-	private ProdDAO dao = ProdDAOImpl.getInstance();
+
+	@Inject
+	private ProdDAO dao;
+	
+	@Value("#{appInfo.prodImageUrl}")
+	private String prodImages;
 	
 	/**
 	 * 상품의 이미지를 저장
@@ -39,7 +44,7 @@ public class ProdServiceImpl implements ProdService {
 		try(
 			InputStream is=prodImage.getInputStream();	
 			){
-			File saveFolder= ContestLoaderListener.prodImages;
+			File saveFolder= new File(prodImages);
 			String saveName = prod.getProdImg();
 			File saveFile = new File(saveFolder, saveName);
 			FileUtils.copyInputStreamToFile(is, saveFile);
@@ -49,7 +54,9 @@ public class ProdServiceImpl implements ProdService {
 		}
 		
 	}
-	private SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+	
+	@Inject
+	private SqlSessionFactory sqlSessionFactory;
 //	차후에 spring을 이용하면 AOP방법론에 따라 Platform based transaction Manager 를 이용하여 해결
 	@Override
 	public ServiceResult createProd(ProdVO prod) {

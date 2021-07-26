@@ -10,11 +10,14 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,54 +32,62 @@ import kr.or.ddit.vo.PagingVO;
 
 @Controller
 public class FreeBoardRetrieveController {
-
 	@Inject
-	FreeBoardService boardService;
+	private FreeBoardService service;
+	
+	@RequestMapping(value="/board/boardList.do", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public PagingVO<FreeBoardVO> listForAjax(
+		@RequestParam(value="page", required=false, defaultValue="1") int currentPage,
+		@ModelAttribute("simpleSearch") ExtendsSearchVO simpleSearch
+	) {
+		PagingVO<FreeBoardVO> pagingVO = new PagingVO<>();
+		pagingVO.setCurrentPage(currentPage);
+		pagingVO.setSimpleSearch(simpleSearch);
+		int totalRecord = service.retriveBoardCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		List<FreeBoardVO> boardList = service.retriveBoardList(pagingVO);
+		pagingVO.setDatalist(boardList);
+		return pagingVO;
+	} 
+	
 	@RequestMapping("/board/boardList.do")
-	public String list(@RequestParam(value="page",required=false,defaultValue="1")int currentPage,@ModelAttribute("search")ExtendsSearchVO search,HttpServletRequest req,HttpServletResponse resp) {
-		//동기 방식 목록조회
-		// 검색조건 제목,작성자,
-		// 최근 작성글이 먼저 나오도록
-		PagingVO<FreeBoardVO>paging = new PagingVO<>(5, 5);
-		paging.setSimpleSearch(search);
-		paging.setCurrentPage(currentPage);
-		int total = boardService.retriveBoardCount(paging);
-		paging.setTotalRecord(total);
-		List<FreeBoardVO> dataList = boardService.retriveBoardList(paging);
-		paging.setDatalist(dataList);
-		req.setAttribute("pagingVO", paging);
-		req.setAttribute("boardList", dataList);
+	public String boardList(
+		@RequestParam(value="page", required=false, defaultValue="1") int currentPage,
+		@ModelAttribute("simpleSearch") ExtendsSearchVO simpleSearch,
+		Model model
+	) {
+		
+		PagingVO<FreeBoardVO> pagingVO = listForAjax(currentPage, simpleSearch);
+		model.addAttribute("pagingVO", pagingVO);
 		
 		return "board/boardList";
 	}
 	
 	@RequestMapping("/board/boardView.do")
-	public String view(@RequestParam("what")int boNo,HttpServletRequest req,HttpServletResponse resp) {
-		
-		FreeBoardVO board=null;
-		try {
-		board = boardService.retriveBoard(boNo);
-		boardService.incrementCount(boNo,CountType.SEE);
-		req.setAttribute("board", board);
-		}catch(DataNotFoundException e) {
-			new RuntimeException(e);
-		}
-		
+	public String boardView(
+		@RequestParam("what") int boNo
+		, Model model
+	) {
+		FreeBoardVO board = service.retriveBoard(boNo);
+		model.addAttribute("board", board);
 		return "board/boardView";
 	}
 	
-	@RequestMapping(value="/board/boardView.do",method=RequestMethod.POST)
-	public String func(@RequestParam("countType")String type,@RequestParam("what")int boNo,HttpServletRequest req,HttpServletResponse resp) throws IOException {
+	@RequestMapping(value="/board/boardView.do",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public Map<CountType, String> incread(
+			@RequestParam("countType")String type,
+			@RequestParam("what")int boNo,
+			HttpServletRequest req,
+			HttpServletResponse resp
+			) throws IOException {
 		FreeBoardVO board=null;
 		CountType conType=null;
-		resp.setCharacterEncoding("utf-8");
-		resp.setContentType("application/json;charset=utf-8");
 		
-		try (
-				PrintWriter out = resp.getWriter();
-				){
-		board = boardService.retriveBoard(boNo);
-		int cnt=-1;
+		try{
+		board = service.retriveBoard(boNo);
+		Integer cnt=-1;
 		switch (type) {
 		case "RECOMMEND":
 			conType=CountType.RECOMMEND;
@@ -90,16 +101,16 @@ public class FreeBoardRetrieveController {
 			resp.sendError(400);
 			return null;
 		}
-		ServiceResult result = boardService.incrementCount(boNo,conType);
+		ServiceResult result = service.incrementCount(boNo,conType);
 		Map<CountType, String>resultMap = new HashMap<>();
 		resultMap.put(conType, "OK");
 		req.setAttribute("board", board);
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(out, resultMap);
+		return resultMap;
 		}catch(DataNotFoundException e) {
 			resp.sendError(400);
 		}
 		return null;
+		
 	}
 	
 	

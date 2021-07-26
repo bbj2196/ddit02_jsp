@@ -6,30 +6,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.commons.exception.DataNotFoundException;
 import kr.or.ddit.enumtype.ServiceResult;
-import kr.or.ddit.multipart.MultipartFile;
-import kr.or.ddit.multipart.StandardMultipartHttpServletRequest;
-import kr.or.ddit.mvc.annotation.RequestMethod;
-import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
-import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
-import kr.or.ddit.mvc.annotation.stereotype.Controller;
-import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.dao.OthersDAOImpl;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
-import kr.or.ddit.utils.ValidatorUtils;
 import kr.or.ddit.validate.groups.UpdateGroup;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.ProdVO;
@@ -37,8 +35,10 @@ import kr.or.ddit.vo.ProdVO;
 @Controller
 public class ProdUpdateControllerServlet {
 
-	ProdService service = new ProdServiceImpl();
-	OthersDAO otherDao = new OthersDAOImpl();
+	@Inject
+	ProdService service;
+	@Inject
+	OthersDAO otherDao;
 	@RequestMapping("/prod/prodUpdate.do")
 	public String doGet(@RequestParam("what") String prodId,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정화면으로이동
@@ -61,27 +61,19 @@ public class ProdUpdateControllerServlet {
 	}
 	
 	@RequestMapping(value="/prod/prodUpdate.do",method=RequestMethod.POST)
-	public String doPost(@RequestPart(value="prodImage",required=false)MultipartFile prodImage,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String doPost(
+			@RequestPart("prodImage")MultipartFile image,
+			@Validated(UpdateGroup.class) @ModelAttribute("prod") ProdVO prod,
+			Errors errors,
+			Model model,
+			HttpServletResponse resp) throws ServletException, IOException {
 		// 수정하기
 		String message = null;
 		String viewName="prod/prodForm";
-		ProdVO prod = new ProdVO();
-		prod.setProdImage(prodImage);
-		Map<String, String[]> params = req.getParameterMap();
-		try {
-			BeanUtils.populate(prod, params);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-			resp.sendError(500,"VO 변환불가");
-			return null;
-		}
-		Map<String, List<String>> errors = new HashMap<>();
-		ValidatorUtils<ProdVO> validator = new ValidatorUtils<ProdVO>();
-		req.setAttribute("prod", prod);
-		req.setAttribute("errors", errors);
-		boolean valid = validator.validate(prod, errors, UpdateGroup.class);
 		
-		if(valid) {
+		model.addAttribute("prod", prod);
+		
+		if(!errors.hasErrors()) {
 			ServiceResult result=null;
 			try {
 			result = service.modifyProd(prod);
@@ -102,9 +94,9 @@ public class ProdUpdateControllerServlet {
 			default:
 				message = "서버오류 잠시후에";
 				viewName="prod/prodForm";
-				break;
+				break;	
 			}
-			req.setAttribute("message", message);
+			model.addAttribute("message", message);
 		}
 		
 		return viewName;

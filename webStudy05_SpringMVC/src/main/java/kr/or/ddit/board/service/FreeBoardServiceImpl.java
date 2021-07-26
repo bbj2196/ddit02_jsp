@@ -8,15 +8,14 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.board.dao.AttatchDAO;
-import kr.or.ddit.board.dao.AttatchDAOImpl;
 import kr.or.ddit.board.dao.FreeBoardDAO;
-import kr.or.ddit.board.dao.FreeBoardDAOImpl;
 import kr.or.ddit.commons.exception.DataNotFoundException;
-import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.enumtype.ServiceResult;
+import kr.or.ddit.utils.EncryptUtils;
 import kr.or.ddit.vo.AttatchVO;
 import kr.or.ddit.vo.FreeBoardVO;
 import kr.or.ddit.vo.PagingVO;
@@ -28,6 +27,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	private FreeBoardDAO boardDao;
 	@Inject
 	private AttatchDAO attDao;
+	@Inject
+	private SqlSessionFactory sqlSessiongFactory;
 	private File saveDir=new File("d:/savedfile");
 	@Override
 	public ServiceResult createBoard(FreeBoardVO board) {
@@ -43,8 +44,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 				return ServiceResult.FILE_IO_ERROR;
 			}
 		}
-//		String encoded=EncryptUtils.encryptSha512Base64(board.getBoPass());
-//		board.setBoPass(encoded);
+		String encoded=EncryptUtils.encryptSha512Base64(board.getBoPass());
+		board.setBoPass(encoded);
 		int cnt=boardDao.insertBoard(board);
 		if(cnt >0) {
 			if(fileCnt >0) {
@@ -97,12 +98,13 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Override
 	public ServiceResult modifyBoard(FreeBoardVO board) {
 		FreeBoardVO saved = boardDao.selectBoard(board.getBoNo());
-//		String encoded = EncryptUtils.encryptSha512Base64(board.getBoPass());
-//		String savedPass = saved.getBoPass();
+		String encoded = EncryptUtils.encryptSha512Base64(board.getBoPass());
+		String savedPass = saved.getBoPass();
 		
-//		if(!savedPass.equals(encoded)) {
-//			return ServiceResult.INVALIDPASSWORD;
-//		}
+		if(!savedPass.equals(encoded)) {
+			return ServiceResult.INVALIDPASSWORD;
+		}
+		board.setBoPass(encoded);
 		// 새로 추가된거 저장
 		if(board.getAttatchList() != null && !board.getAttatchList().isEmpty()) {
 		saveFiles(board);
@@ -141,13 +143,13 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 //			return ServiceResult.INVALIDPASSWORD;
 //		}
 		try(
-				SqlSession sqlSession = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();
-				){
+				SqlSession sqlSession = sqlSessiongFactory.openSession();
+				){	////안지웟다~~~~~~~~~~~~~~~~~~~~~
 			// 첨부파일여부 확인
 			List<AttatchVO> attList = saved.getAttatchList();
 			if (attList != null && !attList.isEmpty()) {
 				// attatch 삭제
-				int attCnt = attDao.deleteAll(saved.getBoNo(), sqlSession);
+				int attCnt = attDao.deleteAll(saved.getBoNo());
 				if (attCnt > 0) {
 					// 파일삭제
 					int delCnt = 0;
@@ -158,7 +160,6 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 					flag = delCnt == attCnt;
 				}
 			}
-			sqlSession.commit();
 		}// end try
 		if (flag) {
 			// 게시글 삭제
@@ -177,7 +178,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		if(vo == null) {
 			throw new DataNotFoundException(attNo+"");
 		}
-		attDao.increamentDownCount(attNo);
+//		attDao.increamentDownCount(attNo);
 		return vo;
 	}
 

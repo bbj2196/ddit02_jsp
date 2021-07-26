@@ -2,16 +2,20 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.stereotype.Repository;
 
-import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
+
 public class ProdDAOImpl implements ProdDAO {
 
-	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+	@Inject
+	SqlSessionFactory sqlSessionFactory;
 	private static ProdDAO instance;
 	private ProdDAOImpl() {
 	}
@@ -54,7 +58,6 @@ public class ProdDAOImpl implements ProdDAO {
 
 	@Override
 	public int updateProd(ProdVO prod, SqlSession sqlSession) {
-			ProdDAO mapper = sqlSession.getMapper(ProdDAO.class);
 			return sqlSession.update("kr.or.ddit.prod.dao.ProdDAO.updateProd",prod);
 		}
 	}

@@ -2,6 +2,7 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSession;
 
 import kr.or.ddit.vo.PagingVO;
@@ -13,6 +14,7 @@ import kr.or.ddit.vo.ProdVO;
  * @author PC-13
  *
  */
+@Mapper
 public interface ProdDAO {
 	/**
 	 * 신규 상품 등록

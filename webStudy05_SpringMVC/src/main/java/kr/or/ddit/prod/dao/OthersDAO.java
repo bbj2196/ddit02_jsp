@@ -2,6 +2,8 @@ package kr.or.ddit.prod.dao;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import kr.or.ddit.vo.BuyerVO;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * @author PC-13
  *
  */
+@Mapper
 public interface OthersDAO {
 	
 	/**

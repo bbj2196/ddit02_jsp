@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <!doctype html>
 <html lang="ko">
   <head>
@@ -11,7 +11,7 @@
     <meta name="generator" content="Hugo 0.80.0">
     <title>Dashboard Template · Bootstrap v4.6</title>
 
-	<jsp:include page="/includee/preScript.jsp"></jsp:include>
+	<tiles:insertAttribute name="preScript"></tiles:insertAttribute>
 
 	<meta name="theme-color" content="#563d7c">
 
@@ -39,21 +39,21 @@
   <body>
     
 	<header>
-		<jsp:include page="/includee/headerMenu.jsp"></jsp:include>
+	<tiles:insertAttribute name="headerMenu"></tiles:insertAttribute>
 	</header>
 <div class="container-fluid">
   <div class="row">
-    <jsp:include page="/includee/leftMenu.jsp"></jsp:include>
+    
+	<tiles:insertAttribute name="leftMenu"></tiles:insertAttribute>
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-    <%
-	String contentsPage=(String)request.getAttribute("contentsPage");
-	pageContext.include(contentsPage);
-	%>
+   
+   <tiles:insertAttribute name="content"></tiles:insertAttribute>
+   
     </main>
   </div>
 	</div>
-	<jsp:include page="/includee/footer.jsp"></jsp:include>
+		<tiles:insertAttribute name="footer"></tiles:insertAttribute>
   </body>
 </html>
     

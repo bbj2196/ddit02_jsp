@@ -57,7 +57,7 @@ public class ProdVO implements Serializable{
 	private String prodImg; // DB communication
 	
 	@NotNull(groups=InsertGroup.class)
-	@FileMime(mime="image/")
+
 	private transient MultipartFile prodImage; // Client communication
 	
 	

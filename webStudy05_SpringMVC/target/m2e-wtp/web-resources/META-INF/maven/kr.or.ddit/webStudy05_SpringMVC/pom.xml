@@ -50,6 +50,8 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+
+		<!-- view Layer -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -69,6 +71,13 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
 		<!-- marshalling libray -->
 
 		<dependency>

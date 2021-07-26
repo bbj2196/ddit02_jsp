@@ -3,15 +3,19 @@ package kr.or.ddit.prod.dao;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.stereotype.Repository;
 
-import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.BuyerVO;
+
 
 public class OthersDAOImpl implements OthersDAO {
 
-	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+	@Inject
+	SqlSessionFactory sqlSessionFactory;
 	
 	
 	

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,46 +19,46 @@
 </head>
 <body>
 ${message }
-
-	<form action="" method="post" enctype="multipart/form-data">
+	<form:form action="" method="post" enctype="multipart/form-data" commandName="board">
 	<input type="hidden" name="boNo" value="${board.boNo }">
 		<table border="1">
 			<tbody>
 				<tr>
-					<th>부모글번호</th>
-					<td><input type="text" name="boParent"
-						value="${board.boParent}"><label id="boParent-error"
-						class="error" for="boParent">${errors.boParent}</label></td>
+					<%-- <th>부모글번호</th>
+					<td>
+					<input type="text" name="boParent" value="${board.boParent}">
+					<form:errors path="boParent" element="label" id="boParent-error" cssClass="error" for="boParent"></form:errors>	
+					</td> --%>
 				</tr>
 				<tr>
 					<th>게시글제목</th>
 					<td><input type="text" name="boTitle" required
-						value="${board.boTitle}"><label id="boTitle-error"
-						class="error" for="boTitle">${errors.boTitle}</label></td>
+						value="${board.boTitle}"><form:errors path="boTitle" element="label" id="boTitle-error"
+						cssClass="error" for="boTitle"></form:errors></td>
 				</tr>
 				<tr>
 					<th>이메일</th>
 					<td><input type="text" name="boEmail"
-						value="${board.boEmail}"><label id="boEmail-error"
-						class="error" for="boEmail">${errors.boEmail}</label></td>
+						value="${board.boEmail}"><form:errors  element="label" id="boEmail-error"  path="boEmail"
+						class="error" for="boEmail">${errors.boEmail}</form:errors></td>
 				</tr>
 				<tr>
 					<th>비밀번호</th>
 					<td><input type="text" name="boPass" required
-						value=""><label id="boPass-error"
-						class="error" for="boPass">${errors.boPass}</label></td>
+						value=""><form:errors id="boPass-error"  element="label" path="boPass"
+						class="error" for="boPass">${errors.boPass}</form:errors></td>
 				</tr>
 				<tr>
 					<th>작성자</th>
 					<td><input type="text" name="boWriter" required
-						value="${board.boWriter}"><label id="boWriter-error"
-						class="error" for="boWriter">${errors.boWriter}</label></td>
+						value="${board.boWriter}"><form:errors id="boWriter-error"  element="label" path="boWriter"
+						class="error" for="boWriter">${errors.boWriter}</form:errors></td>
 				</tr>
 				<tr>
 					<th>IP주소</th>
 					<td><input type="text" name="boIp" required
-						value="${pageContext.request.remoteAddr }" readonly><label id="boIp-error"
-						class="error" for="boIp">${errors.boIp}</label>remote= ${pageContext.request.remoteAddr }/local = ${pageContext.request.localAddr }</td>
+						value="${pageContext.request.remoteAddr }" readonly><form:errors id="boIp-error"  element="label" path="boIp"
+						class="error" for="boIp">${errors.boIp}</form:errors>remote= ${pageContext.request.remoteAddr }/local = ${pageContext.request.localAddr }</td>
 				</tr>
 				<c:if test="${not empty board.attatchList }">
 				<tr>
@@ -71,14 +72,14 @@ ${message }
 				</c:if>
 				<tr>
 				<th>첨부파일</th>
-				<td><input type="file" name="files" multiple><label id="boFiles-error"
-						class="error" for="boFiles">${errors.boFiles}</label></td>
+				<td><input type="file" name="boFiles" multiple><form:errors id="boFiles-error"  element="label" path="boFiles"
+						class="error" for="boFiles">${errors.boFiles}</form:errors></td>
 				</tr>
 				<tr>
 					<th>내용</th>
 					<td><textarea id="boContent" name="boContent" rows="5" cols="25" ></textarea>
-					<label id="boContent-error"
-						class="error" for="boContent">${errors.boContent}</label></td>
+					<form:errors id="boContent-error"  element="label" path="boContent"
+						class="error" for="boContent">${errors.boContent}</form:errors></td>
 				</tr>
 				<tr>
 				<td colspan="2">
@@ -91,7 +92,7 @@ ${message }
 		<div id="hidden">
 		
 		</div>
-		</form>
+		</form:form>
 
 	
 	
